@@ -31,7 +31,7 @@ def kayttoliittyma():
             rivi.append(ruutu)
         ruudukko.append(rivi)
 
-    # Lisää naapurit
+    # Lisää pysty- ja vaakasuunnassa sijaitsevat naapurit
     for y in range(korkeus):
         for x in range(leveys):
             ruutu = ruudukko[y][x]
@@ -47,7 +47,7 @@ def kayttoliittyma():
     skaalauskerroin = 9
     skaalattu_kartta = (leveys*skaalauskerroin, korkeus*skaalauskerroin)
     
-    haku = Dijkstra(ruudukko)
+    haku = Dijkstra()
     hae = True
     etsi = False
     piirra = True
@@ -55,6 +55,7 @@ def kayttoliittyma():
     valittu_loppu = False
 
     while True:
+        # Pygame käyttäjän komennot
         for tapahtuma in pygame.event.get():
             if tapahtuma.type == pygame.QUIT:
                 exit()
@@ -86,6 +87,7 @@ def kayttoliittyma():
         if etsi:
             hae = haku.lyhin_dijkstra()
 
+        # Ikkunan piirtäminen
         ikkuna.fill(MUSTA)
         
         if piirra:

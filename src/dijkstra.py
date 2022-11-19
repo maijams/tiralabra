@@ -1,6 +1,5 @@
 class Dijkstra:
-    def __init__(self, ruudukko):
-        self.ruudukko = ruudukko
+    def __init__(self):
         self.alku = None
         self.jono = []
         self.reitti = []
