@@ -1,0 +1,7 @@
+# Viikkoraportti 3
+
+Tällä viikolla en ajankäytöllisten esteiden takia voinut käyttää harjoitustyön edistämiseen niin paljon tunteja kun olisin halunnut. Viime viikolta jääneen bugin selvittämiseen kului kauemman aikaa kun olin kuvitellut, joten ohjelma ei myöskään edennyt siten mitä viime viikolla vielä ajattelin. Bugin lähde oli lopulta liiankin simppeli, olin ruutujen naapurihaussa käyttänyt väärää muuttujaa eikä naapurit olleet tämän takia määrittyneet oikein. Toinen bugi liittyi ohjelmassa käytettävään karttaan. Kartta on käsin Paint-ohjelmalla piirretty 100px x 100px kokoinen kuva ja oletuksena oli että kaikki pikselit ovat RGB-väriltään joko mustia (0,0,0) tai valkoisia (255,255,255). Pitkällisen ihmettelyn jälkeen havaitsin että kuvassa on n. 1500 pikseliä jotka ovat jotain tältä väliltä, toisin sanoen lähes mustia tai lähes valkoisia, mutta ne eivät täyttäneet koodin RGB-arvojen vaatimuksia. Tämä aiheutti niin ikään ongelmia naapureiden määrittämiseen ennen kuin ongelman juurisyy löytyi.
+
+Tällä hetkellä ohjelman reitinhaku toimii Dijkstran algoritmilla, reitin lähtö- ja loppupisteen voi itse valita klikkaamalla hiirellä. Lyhimmän reitin löydyttyä ohjelma tulostaa reitin pituuden ruudulle. Ensi viikon tavoitteena on jatkaa sitä mitä olisin jo tällä viikolla halunnut ehtiä tekeväni, eli parantaa ohjelman rakennetta ja aloittaa testien kirjoittaminen.
+
+Viikon työtunnit: 9 h
