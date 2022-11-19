@@ -3,6 +3,11 @@ from PIL import Image
 from ruutu import Ruutu
 from dijkstra import Dijkstra
 
+MUSTA = (0,0,0)
+VALKOINEN = (255,255,255)
+PUNAINEN = (255,0,0)
+VIHREA = (0,255,0)
+SININEN = (0,0,255)
 
 def kayttoliittyma():
     kuva = Image.open("kartta.png")
@@ -12,21 +17,23 @@ def kayttoliittyma():
     ruudukko = []
         
     # Luo ruudukko
-    for i in range(korkeus):
+    for y in range(korkeus):
         rivi = []
-        for j in range(leveys):
-            ruutu = Ruutu(i,j)
-            if pikselikartta[i,j] == (255,255,255):
+        for x in range(leveys):
+            ruutu = Ruutu(y,x)
+            # Ruutu on seinää jos sen RGB-arvojen summa on tarpeeksi suuri (=ruutu riittävän vaalea)
+            if sum(pikselikartta[x,y]) > 735:
                 ruutu.seina = True
-            rivi.append(Ruutu(i,j))
+            rivi.append(ruutu)
         ruudukko.append(rivi)
 
     # Lisää naapurit
-    for i in range(korkeus):
-        for j in range(leveys):
-            if not ruudukko[i][j].seina:
-                ruudukko[i][j].lisaa_naapurit(ruudukko)
-
+    for y in range(korkeus):
+        for x in range(leveys):
+            ruutu = ruudukko[y][x]
+            if not ruutu.seina:
+                ruutu.lisaa_naapurit(ruudukko)
+        
     # Aseta lähtöruutu manuaalisesti
     lahtoruutu = ruudukko[10][10]
     lahtoruutu.alku = True
@@ -38,35 +45,39 @@ def kayttoliittyma():
     
     pygame.init()
     pygame.display.set_caption("Reitinhaku")
-    naytto = pygame.display.set_mode((1000, 800))
+    naytto = pygame.display.set_mode((2100, 1100))
+    haku = Dijkstra(ruudukko, lahtoruutu, maaliruutu)
+    etsi = True
 
     while True:
         for tapahtuma in pygame.event.get():
             if tapahtuma.type == pygame.QUIT:
                 exit()
 
-        haku = Dijkstra(ruudukko, lahtoruutu, maaliruutu)
-        haku.lyhin_dijkstra()
+        if etsi:
+            etsi = haku.lyhin_dijkstra()
 
-        naytto.fill((0,0,0))
+        naytto.fill(MUSTA)
         
-        for i in range(leveys):
-            for j in range(korkeus):
-                ruutu = ruudukko[i][j]
+        for y in range(leveys):
+            for x in range(korkeus):
+                ruutu = ruudukko[y][x]
                 if ruutu.jonossa:
-                    pikselikartta[i,j] = (200,0,0)
+                    pikselikartta[x,y] = PUNAINEN
                 if ruutu.vierailtu:
-                    pikselikartta[i,j] = (0,200,0)
+                    pikselikartta[x,y] = VIHREA
                 if ruutu in haku.reitti:
-                    pikselikartta[i,j] = (0,0,200)
+                    pikselikartta[x,y] = SININEN
                 if ruutu.alku:
-                    pikselikartta[i,j] = (0,200,200)
+                    pikselikartta[x,y] = (0,200,200)
                 if ruutu.maali:
-                    pikselikartta[i,j] = (200,200,0)
+                    pikselikartta[x,y] = (200,200,0)
             
         kuva.save("reitti.png")
-        kartta = pygame.transform.scale(pygame.image.load("reitti.png"), (500,500))
+        kartta = pygame.transform.scale(pygame.image.load("reitti.png"), (900,900))
         naytto.blit(kartta, (100,100))
         
         pygame.display.flip()        
                 
+
+kayttoliittyma()

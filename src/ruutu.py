@@ -1,7 +1,7 @@
 class Ruutu:
-    def __init__(self, i, j):
-        self.x = i
-        self.y = j
+    def __init__(self, y, x):
+        self.y = y
+        self.x = x
         self.alku = False
         self.maali = False
         self.seina = False
@@ -11,14 +11,14 @@ class Ruutu:
         self.naapurit = []
         
     def lisaa_naapurit(self, ruudukko):
-        naapurit = [(0,1), (1,0), (0,-1), (-1,0)]
-        for naapuri in naapurit:
+        suunnat = [(0,1), (1,0), (0,-1), (-1,0)]
+        for suunta in suunnat:
             try:
-                ruutu = ruudukko[self.x + naapuri[0]][self.y + naapuri[1]]
-                if not ruutu.seina:
-                    self.naapurit.append(ruutu)
+                naapuri = ruudukko[self.y + suunta[0]][self.x + suunta[1]]
+                if not naapuri.seina:
+                    self.naapurit.append(naapuri)
             except:
                 pass
         
     def __str__(self):
-        return f"{(self.x, self.y)}"
+        return f"{(self.y, self.x)}"

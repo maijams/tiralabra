@@ -14,11 +14,12 @@ class Dijkstra:
                 while ruutu.edellinen != self.alku:
                     self.reitti.append(ruutu.edellinen)
                     ruutu = ruutu.edellinen
-                return
+                return False
             else:
                 for naapuri in ruutu.naapurit:
                     if not naapuri.jonossa:
                         naapuri.edellinen = ruutu
                         naapuri.jonossa = True
                         self.jono.append(naapuri)
+                return True
         
