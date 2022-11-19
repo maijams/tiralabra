@@ -43,6 +43,9 @@ def kayttoliittyma():
     ikkunan_leveys = 2100
     ikkunan_korkeus = 1100
     ikkuna = pygame.display.set_mode((ikkunan_leveys, ikkunan_korkeus))
+    fontti = pygame.font.SysFont("Arial", 24)
+    ohjeteksti = "Valitse lähtöpiste klikkaamalla hiirellä kartan mustalla alueella. Toinen klikkaus valitsee maalin ja kolmas klikkaus käynnistää haun."
+    ohje = fontti.render(ohjeteksti, True, VALKOINEN)
     positio_kartta = (100,100) #(x,y)
     skaalauskerroin = 9
     skaalattu_kartta = (leveys*skaalauskerroin, korkeus*skaalauskerroin)
@@ -109,9 +112,14 @@ def kayttoliittyma():
         if hae == False:
             piirra = False
             etsi = False
+            pituus = f'Löydetyn reitin pituus: {str(len(haku.reitti))}'
+            tulos = fontti.render(pituus, True, VALKOINEN)
+            ikkuna.blit(tulos, (20,60))
             
         kartta = pygame.transform.scale(pygame.image.load("reitti.png"), skaalattu_kartta)
+        ikkuna.blit(ohje, (20,20))
         ikkuna.blit(kartta, positio_kartta)
+    
         
         pygame.display.flip()        
                 
