@@ -39,10 +39,10 @@ def kayttoliittyma():
                 ruutu.lisaa_naapurit(ruudukko)
     
     pygame.init()
+    IKKUNAN_LEVEYS = 2100
+    IKKUNAN_KORKEUS = 1100
+    ikkuna = pygame.display.set_mode((IKKUNAN_LEVEYS, IKKUNAN_KORKEUS))
     pygame.display.set_caption("Reitinhaku")
-    ikkunan_leveys = 2100
-    ikkunan_korkeus = 1100
-    ikkuna = pygame.display.set_mode((ikkunan_leveys, ikkunan_korkeus))
     fontti = pygame.font.SysFont("Arial", 24)
     ohjeteksti = "Valitse lähtöpiste klikkaamalla hiirellä kartan mustalla alueella. Toinen klikkaus valitsee maalin ja kolmas klikkaus käynnistää haun."
     ohje = fontti.render(ohjeteksti, True, VALKOINEN)
@@ -117,10 +117,15 @@ def kayttoliittyma():
             ikkuna.blit(tulos, (20,60))
             
         kartta = pygame.transform.scale(pygame.image.load("reitti.png"), skaalattu_kartta)
-        ikkuna.blit(ohje, (20,20))
         ikkuna.blit(kartta, positio_kartta)
+        ikkuna.blit(ohje, (20,20))
+        ikkuna.blit(fontti.render("Dijkstra:", True, VALKOINEN), (500,60))
+        ikkuna.blit(fontti.render("lähtö", True, PUNAINEN), (100,1040))
+        ikkuna.blit(fontti.render("maali", True, VIHREA), (200,1040))
+        ikkuna.blit(fontti.render("vierailtu", True, TURKOOSI), (300,1040))
+        ikkuna.blit(fontti.render("jonossa", True, KELTAINEN), (420,1040))
+        ikkuna.blit(fontti.render("reitti", True, SININEN), (550,1040))
     
-        
         pygame.display.flip()        
                 
 
