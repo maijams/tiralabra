@@ -9,10 +9,10 @@ class Ruutu:
         self.vierailtu = False
         self.edellinen = None
         self.naapurit = []
-    
-    # Lisää ruudulle sen pysty- ja vaakasuunnassa sijaitsevat naapurit   
+        self.etaisyys = None
+     
     def lisaa_naapurit(self, ruudukko):
-        suunnat = [(0,1), (1,0), (0,-1), (-1,0)]
+        suunnat = [(0,1), (1,0), (0,-1), (-1,0), (1,1), (-1,1), (-1,-1), (1,-1)]
         for suunta in suunnat:
             try:
                 naapuri = ruudukko[self.y + suunta[0]][self.x + suunta[1]]

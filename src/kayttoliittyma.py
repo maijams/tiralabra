@@ -12,14 +12,8 @@ SININEN = (0,0,255)
 TURKOOSI = (0,200,200)
 KELTAINEN = (200,200,0)
 
-def kayttoliittyma():
-    # Kartan & reitin piirtämisen alustus
-    kuva = Image.open("kartta.png")
-    kuva.save("reitti.png")
-    pikselikartta = kuva.load()
-    leveys, korkeus = kuva.size
-    
-    # Luo ruudukko
+
+def luo_ruudukko(korkeus, leveys, pikselikartta):
     ruudukko = []
     for y in range(korkeus):
         rivi = []
@@ -30,8 +24,19 @@ def kayttoliittyma():
                 ruutu.seina = True
             rivi.append(ruutu)
         ruudukko.append(rivi)
+    return ruudukko
 
-    # Lisää pysty- ja vaakasuunnassa sijaitsevat naapurit
+
+def kayttoliittyma():
+    # Kartan & reitin piirtämisen alustus
+    kuva = Image.open("kartta.png")
+    kuva.save("reitti.png")
+    pikselikartta = kuva.load()
+    leveys, korkeus = kuva.size
+    
+    ruudukko = luo_ruudukko(korkeus, leveys, pikselikartta)
+
+    # Lisää naapurit
     for y in range(korkeus):
         for x in range(leveys):
             ruutu = ruudukko[y][x]
@@ -54,6 +59,7 @@ def kayttoliittyma():
     hae = True
     etsi = False
     piirra = True
+    valittu_algo = False
     valittu_alku = False
     valittu_loppu = False
 
