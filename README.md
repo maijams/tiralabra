@@ -2,9 +2,9 @@
 
 ## Dokumentaatio
 
-[Määrittelydokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/maarittelydokumentti.md)
-[Toteutusdokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/toteutusdokumentti.md)
-[Testausdokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/testausdokumentti.md)
+- [Määrittelydokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/maarittelydokumentti.md)
+- [Toteutusdokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/toteutusdokumentti.md)
+- [Testausdokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/testausdokumentti.md)
 
 
 ## Viikkoraportit
