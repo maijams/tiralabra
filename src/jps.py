@@ -91,7 +91,7 @@ class Jps:
                     y, x = self.diagonaalihaku((ruutu[0], ruutu[1]), suunta[0], suunta[1])
                     heapq.heappush(self.jono, (self.ruudukko[y][x].etaisyys, self.ruudukko[y][x]))
             except ReittiLoytyi:
-                return 
+                self.palauta_reitti()
                 
     
     def palauta_reitti(self):
@@ -99,4 +99,4 @@ class Jps:
         while ruutu.edellinen != self.alku:
             self.reitti.append(ruutu.edellinen)
             ruutu = ruutu.edellinen
-        return self.reitti
+        

@@ -2,6 +2,7 @@ import pygame
 from PIL import Image
 from ruutu import Ruutu
 from dijkstra import Dijkstra
+from jps import Jps
 
 # RGB-värejä
 MUSTA = (0,0,0)
@@ -49,17 +50,19 @@ def kayttoliittyma():
     ikkuna = pygame.display.set_mode((IKKUNAN_LEVEYS, IKKUNAN_KORKEUS))
     pygame.display.set_caption("Reitinhaku")
     fontti = pygame.font.SysFont("Arial", 24)
-    ohjeteksti = "Valitse lähtöpiste klikkaamalla hiirellä kartan mustalla alueella. Toinen klikkaus valitsee maalin ja kolmas klikkaus käynnistää haun."
+    ohjeteksti = "Valitse Dijkstra painamalla 1 tai JPS painamalla 2 (JPS animaatio ei toimi vielä)."
     ohje = fontti.render(ohjeteksti, True, VALKOINEN)
+    ohjeteksti2 = "Tämän jälkeen valitse lähtöpiste klikkaamalla hiirellä kartan mustalla alueella. Toinen klikkaus valitsee maalin ja kolmas klikkaus käynnistää haun."
+    ohje2 = fontti.render(ohjeteksti2, True, VALKOINEN)
     positio_kartta = (100,100) #(x,y)
     skaalauskerroin = 9
     skaalattu_kartta = (leveys*skaalauskerroin, korkeus*skaalauskerroin)
     
-    haku = Dijkstra()
     hae = True
     etsi = False
     piirra = True
-    valittu_algo = False
+    haku = None
+    valittu_algo = None
     valittu_alku = False
     valittu_loppu = False
 
@@ -68,7 +71,16 @@ def kayttoliittyma():
         for tapahtuma in pygame.event.get():
             if tapahtuma.type == pygame.QUIT:
                 exit()
-            elif tapahtuma.type == pygame.MOUSEBUTTONDOWN:
+            # Valitse algoritmi
+            if tapahtuma.type == pygame.KEYDOWN and valittu_algo == None:
+                if tapahtuma.key == pygame.K_1:
+                    haku = Dijkstra()
+                    haku.ruudukko = ruudukko
+                    valittu_algo = "dijkstra"
+                elif tapahtuma.key == pygame.K_2:
+                    haku = Jps()
+                    valittu_algo = "jps"
+            elif tapahtuma.type == pygame.MOUSEBUTTONDOWN and valittu_algo != None:
                 x, y = tapahtuma.pos
                 x_kartta = round((x-positio_kartta[0]) / skaalauskerroin)
                 y_kartta = round((y-positio_kartta[1]) / skaalauskerroin)
@@ -87,19 +99,23 @@ def kayttoliittyma():
                     if x_kartta in range(leveys) and y_kartta in range(korkeus):
                         ruutu = ruudukko[y_kartta][x_kartta]
                         if not ruutu.seina:
+                            haku.loppu = ruutu
                             ruutu.maali = True
                             valittu_loppu = True
                 # Käynnistä haku & animaatio
                 elif pygame.mouse.get_pressed()[0] and valittu_alku and valittu_loppu:
                     etsi = True           
                             
-        if etsi:
+        if etsi and valittu_algo == "dijkstra":
             hae = haku.lyhin_dijkstra()
+            
+        elif etsi and valittu_algo == "jps":
+            hae = haku.lyhin_jps()
 
         # Ikkunan piirtäminen
         ikkuna.fill(MUSTA)
         
-        if piirra:
+        if piirra and valittu_algo:
             for y in range(korkeus):
                 for x in range(leveys):
                     ruutu = ruudukko[y][x]
@@ -120,12 +136,17 @@ def kayttoliittyma():
             etsi = False
             pituus = f'Löydetyn reitin pituus: {str(len(haku.reitti))}'
             tulos = fontti.render(pituus, True, VALKOINEN)
-            ikkuna.blit(tulos, (20,60))
+            ikkuna.blit(tulos, (1200,400))
             
         kartta = pygame.transform.scale(pygame.image.load("reitti.png"), skaalattu_kartta)
         ikkuna.blit(kartta, positio_kartta)
         ikkuna.blit(ohje, (20,20))
-        ikkuna.blit(fontti.render("Dijkstra:", True, VALKOINEN), (500,60))
+        ikkuna.blit(ohje2, (20,60))
+        
+        if valittu_algo == "dijkstra":
+            ikkuna.blit(fontti.render("Valittu Dijkstra", True, VALKOINEN), (1200,300))
+        
+        # Värien selitteet
         ikkuna.blit(fontti.render("lähtö", True, PUNAINEN), (100,1040))
         ikkuna.blit(fontti.render("maali", True, VIHREA), (200,1040))
         ikkuna.blit(fontti.render("vierailtu", True, TURKOOSI), (300,1040))

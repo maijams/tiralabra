@@ -1,6 +1,7 @@
 class Dijkstra:
     def __init__(self):
         self.alku = None
+        self.loppu = None
         self.jono = []
         self.reitti = []
     
