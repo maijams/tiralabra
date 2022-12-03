@@ -2,7 +2,7 @@ import pygame
 from PIL import Image
 from ruutu import Ruutu
 from dijkstra import Dijkstra
-from jps import Jps
+from jps import JumpPointSearch
 from heapq import heappush, heappop
 
 
@@ -81,7 +81,7 @@ def kayttoliittyma():
                     haku.ruudukko = ruudukko
                     valittu_algo = "dijkstra"
                 elif tapahtuma.key == pygame.K_2:
-                    haku = Jps()
+                    haku = JumpPointSearch()
                     haku.ruudukko = ruudukko
                     valittu_algo = "jps"
             elif tapahtuma.type == pygame.MOUSEBUTTONDOWN and valittu_algo != None:

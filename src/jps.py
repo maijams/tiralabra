@@ -1,11 +1,11 @@
 from heapq import heappush, heappop
-
+from math import sqrt
 
 class ReittiLoytyi(Exception):
     pass
 
 
-class Jps:
+class JumpPointSearch:
     def __init__(self):
         self.ruudukko = None
         self.alku = None
@@ -13,7 +13,7 @@ class Jps:
         self.jono = []
         self.reitti = []
         self.laskuri = 0
-    
+
 
     def vaaka_ja_pystyhaku(self, alku, suunta_y, suunta_x):
         nykyinen_y = alku[0]
@@ -59,7 +59,7 @@ class Jps:
         while True:
             nykyinen_y += suunta_y
             nykyinen_x += suunta_x
-            etaisyys += 1
+            etaisyys += sqrt(2)
             
             if not self.ruudukko[nykyinen_y][nykyinen_x].seina and not self.ruudukko[nykyinen_y][nykyinen_x].vierailtu:
                 self.ruudukko[nykyinen_y][nykyinen_x].etaisyys = etaisyys
@@ -69,7 +69,8 @@ class Jps:
                     raise ReittiLoytyi()
             else:  # Jos törmätään seinään tai aiempiin tutkittuun osaan
                 return None
-    
+            
+            # Tarkistetaan naapuriruutujen avulla onko nykyinen ruutu jump point
             if self.ruudukko[nykyinen_y-suunta_y][nykyinen_x].seina and not self.ruudukko[nykyinen_y-suunta_y][nykyinen_x+suunta_x].seina:
                 self.ruudukko[nykyinen_y][nykyinen_x].jumppoint = True
                 return nykyinen_y, nykyinen_x
@@ -78,10 +79,10 @@ class Jps:
                 if uusi is not None:
                     y, x = uusi
                     ruutu = self.ruudukko[y][x]
-                    etaisyys = ruutu.etaisyys + max(abs(ruutu.y-self.loppu.y), abs(ruutu.x-self.loppu.x))
+                    etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
                     self.laskuri += 1
                     heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
-                    
+
             if self.ruudukko[nykyinen_y][nykyinen_x-suunta_x].seina and not self.ruudukko[nykyinen_y+suunta_y][nykyinen_x-suunta_x].seina:
                 self.ruudukko[nykyinen_y][nykyinen_x].jumppoint = True
                 return nykyinen_y, nykyinen_x
@@ -90,7 +91,7 @@ class Jps:
                 if uusi is not None:
                     y, x = uusi
                     ruutu = self.ruudukko[y][x]
-                    etaisyys = ruutu.etaisyys + max(abs(ruutu.y-self.loppu.y), abs(ruutu.x-self.loppu.x))
+                    etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
                     self.laskuri += 1
                     heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
                     
@@ -108,7 +109,7 @@ class Jps:
                     if uusi is not None:
                         y, x = uusi
                         ruutu = self.ruudukko[y][x]
-                        etaisyys = ruutu.etaisyys + max(abs(ruutu.y-self.loppu.y), abs(ruutu.x-self.loppu.x))
+                        etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
                         self.laskuri += 1
                         heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
                     
@@ -117,7 +118,7 @@ class Jps:
                     if uusi is not None:
                         y, x = uusi
                         ruutu = self.ruudukko[y][x]
-                        etaisyys = ruutu.etaisyys + max(abs(ruutu.y-self.loppu.y), abs(ruutu.x-self.loppu.x))
+                        etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
                         self.laskuri += 1                   
                         heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
                 return True
@@ -133,4 +134,5 @@ class Jps:
         while ruutu.edellinen != self.alku:
             self.reitti.append(ruutu.edellinen)
             ruutu = ruutu.edellinen
+        
         
