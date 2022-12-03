@@ -10,6 +10,7 @@ class Ruutu:
         self.edellinen = None
         self.naapurit = []
         self.etaisyys = None
+        self.jumppoint = False
      
     def lisaa_naapurit(self, ruudukko):
         suunnat = [(0,1), (1,0), (0,-1), (-1,0), (1,1), (-1,1), (-1,-1), (1,-1)]
