@@ -1,0 +1,6 @@
+# Viikkoraportti 5
+
+Viikon työaika kului kokonaisuudessaan JPS-algoritmin debuggaamiseen. Sain algoritmin animoinnin toimimaan & löytämään reitin alku- ja loppupisteen välillä, mutta löydetty reitti ei suurimmassa osassa tapauksia ole lyhyin. Lyhyin reitti löytyy jos alku- ja loppupiste ovat samalla suoralla osuudella, mutta muissa tapauksissa tulee ongelmia. On kieltämättä valitettavaa miten paljon aikaa on saanut menemään tuon JPS-algoritmin kanssa eikä vieläkään tullut sen suhteen valmista. Toivon että enää ei kuitenkaan olisi paljosta kiinni että saisi tuon lyhyimmän reitin aikaiseksi kaikissa tapauksissa. Projektiin edistymiseen on toki vaikuttanut myös se ettei käytettävissäni ole ollut niin paljon aikaa kuin olisin toivonut. Olen kuitenkin edelleen optimistinen että kunhan tuosta JPS kanssa painiskelusta pääsee eteenpäin niin seuraavat vaiheet tulevat etenemään huomattavasti nopeammin ja lopulliseen palautukseen on vielä lähes kuukausi aikaa. Testaus & suorituskykymittaukset odottavat vielä aloittamista, toivotaan että niiden aika olisi ensi viikkoon mennessä.
+
+
+Viikon työtunnit: 9 h
