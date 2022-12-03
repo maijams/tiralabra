@@ -24,6 +24,5 @@ class Dijkstra:
                         naapuri.edellinen = ruutu
                         naapuri.jonossa = True
                         heappush(self.jono, (self.laskuri, naapuri))
-                        #self.jono.append(naapuri)
                 return True
         

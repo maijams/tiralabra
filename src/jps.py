@@ -98,7 +98,7 @@ class Jps:
     def lyhin_jps(self):
         while len(self.jono) > 0:
             etaisyys, laskuri, ruutu = heappop(self.jono)
-            print(ruutu)
+            #print(ruutu)
             xy_suunnat = [(0,1), (1,0), (0,-1), (-1,0)]
             diag_suunnat = [(1,1), (-1,1), (-1,-1), (1,-1)]
             
@@ -129,7 +129,7 @@ class Jps:
     
     def palauta_reitti(self):
         ruutu = self.loppu
-        print(ruutu.etaisyys)
+        #print(ruutu.etaisyys)
         while ruutu.edellinen != self.alku:
             self.reitti.append(ruutu.edellinen)
             ruutu = ruutu.edellinen
