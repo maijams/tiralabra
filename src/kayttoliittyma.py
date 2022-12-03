@@ -174,6 +174,8 @@ def kayttoliittyma():
         #ikkuna.blit(fontti.render("vierailtu", True, TURKOOSI), (300,1040))
         ikkuna.blit(fontti.render("jonossa", True, KELTAINEN), (300,1040))
         ikkuna.blit(fontti.render("reitti", True, SININEN), (420,1040))
+        if valittu_algo == "jps":
+            ikkuna.blit(fontti.render("jump point", True, PINKKI), (520,1040))
     
         pygame.display.flip()        
                 
