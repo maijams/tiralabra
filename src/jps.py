@@ -100,19 +100,11 @@ class JumpPointSearch:
         while len(self.jono) > 0:
             etaisyys, laskuri, ruutu = heappop(self.jono)
             #print(ruutu)
+            #print(self.jono)
             xy_suunnat = [(0,1), (1,0), (0,-1), (-1,0)]
             diag_suunnat = [(1,1), (-1,1), (-1,-1), (1,-1)]
             
             try:
-                for suunta in xy_suunnat:
-                    uusi = self.vaaka_ja_pystyhaku((ruutu.y, ruutu.x), suunta[0], suunta[1])
-                    if uusi is not None:
-                        y, x = uusi
-                        ruutu = self.ruudukko[y][x]
-                        etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
-                        self.laskuri += 1
-                        heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
-                    
                 for suunta in diag_suunnat:
                     uusi = self.diagonaalihaku((ruutu.y, ruutu.x), suunta[0], suunta[1])
                     if uusi is not None:
@@ -120,6 +112,14 @@ class JumpPointSearch:
                         ruutu = self.ruudukko[y][x]
                         etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
                         self.laskuri += 1                   
+                        heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
+                for suunta in xy_suunnat:
+                    uusi = self.vaaka_ja_pystyhaku((ruutu.y, ruutu.x), suunta[0], suunta[1])
+                    if uusi is not None:
+                        y, x = uusi
+                        ruutu = self.ruudukko[y][x]
+                        etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
+                        self.laskuri += 1
                         heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
                 return True
             
