@@ -6,11 +6,11 @@ class ReittiLoytyi(Exception):
 
 
 class JumpPointSearch:
-    def __init__(self):
-        self.ruudukko = None
-        self.alku = None
-        self.loppu = None
-        self.jono = []
+    def __init__(self, ruudukko, alku, loppu, jono):
+        self.ruudukko = ruudukko
+        self.alku = alku
+        self.loppu = loppu
+        self.jono = jono
         self.reitti = []
         self.laskuri = 0
 
@@ -70,62 +70,65 @@ class JumpPointSearch:
             else:  # Jos törmätään seinään tai aiempiin tutkittuun osaan
                 return None
             
+            uusi = self.vaaka_ja_pystyhaku((nykyinen_y, nykyinen_x), suunta_y, 0)
+            if uusi is not None:
+                y, x = uusi
+                ruutu = self.ruudukko[y][x]
+                etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
+                self.laskuri += 1
+                heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
+                
+            uusi = self.vaaka_ja_pystyhaku((nykyinen_y, nykyinen_x), 0, suunta_x)
+            if uusi is not None:
+                y, x = uusi
+                ruutu = self.ruudukko[y][x]
+                etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
+                self.laskuri += 1
+                heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
+
             # Tarkistetaan naapuriruutujen avulla onko nykyinen ruutu jump point
             if self.ruudukko[nykyinen_y-suunta_y][nykyinen_x].seina and not self.ruudukko[nykyinen_y-suunta_y][nykyinen_x+suunta_x].seina:
                 self.ruudukko[nykyinen_y][nykyinen_x].jumppoint = True
                 return nykyinen_y, nykyinen_x
-            else:
-                uusi = self.vaaka_ja_pystyhaku((nykyinen_y, nykyinen_x), suunta_y, 0)
-                if uusi is not None:
-                    y, x = uusi
-                    ruutu = self.ruudukko[y][x]
-                    etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
-                    self.laskuri += 1
-                    heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
+                
 
-            if self.ruudukko[nykyinen_y][nykyinen_x-suunta_x].seina and not self.ruudukko[nykyinen_y+suunta_y][nykyinen_x-suunta_x].seina:
+            elif self.ruudukko[nykyinen_y][nykyinen_x-suunta_x].seina and not self.ruudukko[nykyinen_y+suunta_y][nykyinen_x-suunta_x].seina:
                 self.ruudukko[nykyinen_y][nykyinen_x].jumppoint = True
                 return nykyinen_y, nykyinen_x
-            else:
-                uusi = self.vaaka_ja_pystyhaku((nykyinen_y, nykyinen_x), 0, suunta_x)
-                if uusi is not None:
-                    y, x = uusi
-                    ruutu = self.ruudukko[y][x]
-                    etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
-                    self.laskuri += 1
-                    heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
+            
+                
                     
     
-    def lyhin_jps(self):
+    def etsi_lyhin(self):
         while len(self.jono) > 0:
-            etaisyys, laskuri, ruutu = heappop(self.jono)
-            #print(ruutu)
+            etaisyyss, laskuri, ruuutu = heappop(self.jono)
+            #print(ruuutu)
             #print(self.jono)
             xy_suunnat = [(0,1), (1,0), (0,-1), (-1,0)]
             diag_suunnat = [(1,1), (-1,1), (-1,-1), (1,-1)]
             
             try:
                 for suunta in diag_suunnat:
-                    uusi = self.diagonaalihaku((ruutu.y, ruutu.x), suunta[0], suunta[1])
+                    uusi = self.diagonaalihaku((ruuutu.y, ruuutu.x), suunta[0], suunta[1])
                     if uusi is not None:
                         y, x = uusi
-                        ruutu = self.ruudukko[y][x]
-                        etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
+                        ruuutu = self.ruudukko[y][x]
+                        etaisyyss = ruuutu.etaisyys + sqrt(abs(ruuutu.y-self.loppu.y)**2 + abs(ruuutu.x-self.loppu.x)**2)
                         self.laskuri += 1                   
-                        heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
+                        heappush(self.jono, (etaisyyss, self.laskuri, self.ruudukko[y][x]))
                 for suunta in xy_suunnat:
-                    uusi = self.vaaka_ja_pystyhaku((ruutu.y, ruutu.x), suunta[0], suunta[1])
+                    uusi = self.vaaka_ja_pystyhaku((ruuutu.y, ruuutu.x), suunta[0], suunta[1])
                     if uusi is not None:
                         y, x = uusi
-                        ruutu = self.ruudukko[y][x]
-                        etaisyys = ruutu.etaisyys + sqrt(abs(ruutu.y-self.loppu.y)**2 + abs(ruutu.x-self.loppu.x)**2)
+                        ruuutu = self.ruudukko[y][x]
+                        etaisyyss = ruuutu.etaisyys + sqrt(abs(ruuutu.y-self.loppu.y)**2 + abs(ruuutu.x-self.loppu.x)**2)
                         self.laskuri += 1
-                        heappush(self.jono, (etaisyys, self.laskuri, self.ruudukko[y][x]))
-                return True
+                        heappush(self.jono, (etaisyyss, self.laskuri, self.ruudukko[y][x]))
+                return False
             
             except ReittiLoytyi:
                 self.palauta_reitti()
-                return False
+                return True
                 
     
     def palauta_reitti(self):

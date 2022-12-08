@@ -2,9 +2,9 @@ class Ruutu:
     def __init__(self, y, x):
         self.y = y
         self.x = x
+        self.seina = False
         self.alku = False
         self.maali = False
-        self.seina = False
         self.jonossa = False
         self.vierailtu = False
         self.edellinen = None

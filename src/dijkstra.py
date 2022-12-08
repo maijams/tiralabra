@@ -1,22 +1,21 @@
 from heapq import heappush, heappop
 
 class Dijkstra:
-    def __init__(self):
-        self.alku = None
-        self.loppu = None
-        self.jono = []
+    def __init__(self, ruudukko, jono):
+        self.ruudukko = ruudukko
+        self.jono = jono
         self.reitti = []
         self.laskuri = 0
     
-    def lyhin_dijkstra(self):
+    def etsi_lyhin(self):
         while len(self.jono) > 0:
             etaisyys, ruutu = heappop(self.jono)
             ruutu.vierailtu = True
             if ruutu.maali:
-                while ruutu.edellinen != self.alku:
+                while not ruutu.alku:
                     self.reitti.append(ruutu.edellinen)
                     ruutu = ruutu.edellinen
-                return False
+                return True
             else:
                 for naapuri in ruutu.naapurit:
                     if not naapuri.jonossa:
@@ -24,5 +23,14 @@ class Dijkstra:
                         naapuri.edellinen = ruutu
                         naapuri.jonossa = True
                         heappush(self.jono, (self.laskuri, naapuri))
-                return True
+                return False
         
+    def etsi_naapurit(self):
+        korkeus = len(self.ruudukko)
+        leveys = len(self.ruudukko[0])
+        
+        for y in range(korkeus):
+            for x in range(leveys):
+                ruutu = self.ruudukko[y][x]
+                if not ruutu.seina:
+                    ruutu.lisaa_naapurit(self.ruudukko)
