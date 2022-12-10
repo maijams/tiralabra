@@ -7,6 +7,7 @@ from astar import AStar
 import time
 import os
 
+
 MUSTA = (0,0,0)
 VALKOINEN = (255,255,255)
 PUNAINEN = (255,0,0)
@@ -23,13 +24,14 @@ class Kayttoliittyma:
         self.ruudukko = []
         self.alku = None
         self.loppu = None
+        self.kartta = "kartta1.png"
 
 
-    def luo_ruudukko(self, korkeus, leveys):
+    def luo_ruudukko(self):
         self.ruudukko = []
-        for y in range(korkeus):
+        for y in range(self.korkeus):
             rivi = []
-            for x in range(leveys):
+            for x in range(self.leveys):
                 ruutu = Ruutu(y,x)
                 # Ruutu on seinää jos sen RGB-arvojen summa on tarpeeksi suuri (=ruutu riittävän vaalea)
                 if sum(self.pikselikartta[x,y]) > 735:
@@ -48,6 +50,9 @@ class Kayttoliittyma:
         self.loytyi = False
         self.valittu_algo = None
         self.haku = None
+        
+        self.alusta_kartta_ja_ruudukko(self.kartta)
+        self.luo_ruudukko()
     
     
     def alusta_kartta_ja_ruudukko(self, kartta):
@@ -56,114 +61,106 @@ class Kayttoliittyma:
         self.kuva = Image.open(kuva)
         self.kuva.save("reitti.png")
         self.pikselikartta = self.kuva.load()
-        leveys, korkeus = self.kuva.size
-        self.luo_ruudukko(korkeus, leveys)
+        self.leveys, self.korkeus = self.kuva.size
         
-        return leveys, korkeus
                     
     def aseta_alku(self, y, x):
         self.alku = self.ruudukko[y][x]
         self.alku.alku = True
         self.alku.etaisyys = 0
         
+        
     def aseta_loppu(self, y, x):    
         self.loppu = self.ruudukko[y][x]
         self.loppu.maali = True
         
         
-    def kaynnista(self):
-        self.kartta = "kartta.png"
-        leveys, korkeus = self.alusta_kartta_ja_ruudukko(self.kartta)
-        
+    def kaynnista(self):        
         self.nollaa_haku()
         
         fontti = pygame.font.SysFont("Arial", 24)
         ohjeteksti = "Valitse lähtöpiste klikkaamalla kartan mustalla alueella. Toinen klikkaus valitsee loppupisteen."
         ohje = fontti.render(ohjeteksti, True, VALKOINEN)
-        ohjeteksti2 = "Käynnistä haku numeropainikkeilla:   1 = Dijkstra,   2 = A*,   3 = JPS,   5 = Nollaa haku"
+        ohjeteksti2 = "Käynnistä haku numeropainikkeilla:   1 = Dijkstra,   2 = A*,   3 = JPS,   0 = Nollaa haku                                 Valitse kartta painikkeilla 7, 8 ja 9"
         ohje2 = fontti.render(ohjeteksti2, True, VALKOINEN)
-        positio_kartta = (100,100) #(x,y)
-        skaalauskerroin = 900/korkeus
-        skaalattu_kartta = (leveys*skaalauskerroin, korkeus*skaalauskerroin)
         
-
+        positio_kartta = (100,100) #(x,y)
+        skaalauskerroin = 900/self.korkeus
+        skaalattu_kartta = (self.leveys*skaalauskerroin, self.korkeus*skaalauskerroin)
+        
         while True:
-            # Pygame käyttäjän komennot
             for tapahtuma in pygame.event.get():
+                # Alku- ja loppupisteen valinta
                 if tapahtuma.type == pygame.MOUSEBUTTONDOWN:
                     x, y = tapahtuma.pos
                     x_kartta = round((x-positio_kartta[0]) / skaalauskerroin)
                     y_kartta = round((y-positio_kartta[1]) / skaalauskerroin)
                     
-                    if x_kartta in range(leveys) and y_kartta in range(korkeus):
+                    if x_kartta in range(self.leveys) and y_kartta in range(self.korkeus):
                         ruutu = self.ruudukko[y_kartta][x_kartta]
                         
-                        # Aseta alkupiste
                         if self.alku == None and not ruutu.seina: 
                             self.aseta_alku(y_kartta, x_kartta)
                                     
-                        # Aseta loppupiste
                         elif self.loppu == None and not ruutu.seina:
-                            self.aseta_loppu(y_kartta, x_kartta) 
-                                     
+                            self.aseta_loppu(y_kartta, x_kartta)                              
                          
-                                
-                # Valitse algoritmi
+                # Algoritmim valinta
                 elif tapahtuma.type == pygame.KEYDOWN and self.loppu != None:
-                    if tapahtuma.key == pygame.K_7:
-                        self.alusta_kartta_ja_ruudukko(self.kartta)
-                        self.nollaa_haku()
-                        self.valittu_algo = "Dijkstra"
-                        jono = [(0, 0, self.alku)]
-                        self.haku = Dijkstra(self.ruudukko, jono)
-                        self.haku.etsi_naapurit()
-                        self.etsi = True
-                        
-                    elif tapahtuma.key == pygame.K_8:
-                        self.alusta_kartta_ja_ruudukko(self.kartta)
-                        self.nollaa_haku()
-                        self.valittu_algo = "A*"
-                        jono = [(0, 0, self.alku)]
-                        self.haku = AStar(self.loppu, self.ruudukko, jono)
-                        self.haku.etsi_naapurit()
-                        self.etsi = True
-                            
-                    elif tapahtuma.key == pygame.K_9:
-                        self.alusta_kartta_ja_ruudukko(self.kartta)
-                        self.nollaa_haku()
-                        self.valittu_algo = "JPS"
-                        jono = [(0, 0, self.alku)]
-                        self.haku = JumpPointSearch(self.ruudukko, self.alku, self.loppu, jono)
-                        self.etsi = True
-                        
-                    elif tapahtuma.key == pygame.K_0:
+                    if tapahtuma.key == pygame.K_0:
                         self.alku = None
                         self.loppu = None
-                        self.alusta_kartta_ja_ruudukko(self.kartta)
                         self.nollaa_haku()
+                    
+                    elif tapahtuma.key in (pygame.K_1, pygame.K_2, pygame.K_3):
+                        self.nollaa_haku()
+                        self.etsi = True
+                        jono = [(0, 0, self.alku)]
                         
+                        if tapahtuma.key == pygame.K_1:
+                            self.valittu_algo = "Dijkstra"
+                            self.haku = Dijkstra(self.ruudukko, jono)
+                            self.haku.etsi_naapurit()
+                            
+                        elif tapahtuma.key == pygame.K_2:
+                            self.valittu_algo = "A*"
+                            self.haku = AStar(self.loppu, self.ruudukko, jono)
+                            self.haku.etsi_naapurit()
+                                
+                        elif tapahtuma.key == pygame.K_3:
+                            self.valittu_algo = "JPS"
+                            self.haku = JumpPointSearch(self.ruudukko, self.alku, self.loppu, jono)
+                
+                # Kartan valinta                                   
                 if tapahtuma.type == pygame.KEYDOWN:             
-                    if tapahtuma.key == pygame.K_1:
-                        if self.kartta == "kartta.png":
+                    if tapahtuma.key == pygame.K_7:
+                        if self.kartta == "kartta1.png":
                             break
                         self.alku = None
                         self.loppu = None
-                        self.kartta = "kartta.png"
-                        self.alusta_kartta_ja_ruudukko(self.kartta)
+                        self.kartta = "kartta1.png"
                         self.nollaa_haku()
                         
-                    elif tapahtuma.key == pygame.K_2:
+                    elif tapahtuma.key == pygame.K_8:
                         if self.kartta == "kartta2.png":
                             break
                         self.alku = None
                         self.loppu = None
                         self.kartta = "kartta2.png"
-                        self.alusta_kartta_ja_ruudukko(self.kartta)
                         self.nollaa_haku()   
+                    
+                    elif tapahtuma.key == pygame.K_9:
+                        if self.kartta == "kartta3.png":
+                            break
+                        self.alku = None
+                        self.loppu = None
+                        self.kartta = "kartta3.png"
+                        self.nollaa_haku()
                         
                 if tapahtuma.type == pygame.QUIT:
                     exit()
             
+            # Algoritmin suoritus
             if self.etsi:  
                 aika_alku = time.time()             
                 while self.etsi:
@@ -176,8 +173,8 @@ class Kayttoliittyma:
             self.ikkuna.fill(MUSTA)
             
             if self.piirra:
-                for y in range(korkeus):
-                    for x in range(leveys):
+                for y in range(self.korkeus):
+                    for x in range(self.leveys):
                         ruutu = self.ruudukko[y][x]
                         if self.valittu_algo != None:
                             if ruutu.jonossa:
@@ -196,13 +193,10 @@ class Kayttoliittyma:
                             
                 self.kuva.save("reitti.png")
             
-            
             if self.valittu_algo != None:
                 self.ikkuna.blit(fontti.render(f'Valittu {self.valittu_algo}', True, VALKOINEN), (1200,300))
                 
-                
             if self.loytyi:
-                
                 self.piirra = False
                 self.etsi = False
                 
@@ -218,7 +212,6 @@ class Kayttoliittyma:
                 tulos_aika = fontti.render(aika, True, VALKOINEN)
                 self.ikkuna.blit(tulos_aika, (1200, 600))
                 
-                
             kartta = pygame.transform.scale(pygame.image.load("reitti.png"), skaalattu_kartta)
             self.ikkuna.blit(kartta, positio_kartta)
             self.ikkuna.blit(ohje, (20,20))
@@ -230,7 +223,6 @@ class Kayttoliittyma:
                 loppu = fontti.render(f'Loppu   Y: {self.loppu.y},  X: {self.loppu.x}', True, VALKOINEN)
                 self.ikkuna.blit(loppu, (1200, 750))
                 
-
             # Värien selitteet
             self.ikkuna.blit(fontti.render("lähtö", True, PUNAINEN), (100,1040))
             self.ikkuna.blit(fontti.render("maali", True, VIHREA), (200,1040))

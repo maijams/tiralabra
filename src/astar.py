@@ -11,6 +11,7 @@ class AStar:
         self.reitti = []
         self.laskuri = 0
     
+    
     def etsi_lyhin(self):
         while len(self.jono) > 0:
             etaisyys, laskuri, ruutu = heappop(self.jono)
@@ -34,6 +35,7 @@ class AStar:
                         naapuri.jonossa = True
                         heappush(self.jono, (naapuri.etaisyys + euklidinen, self.laskuri, naapuri))
                 return False
+        
         
     def etsi_naapurit(self):
         korkeus = len(self.ruudukko)

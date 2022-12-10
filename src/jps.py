@@ -92,7 +92,6 @@ class JumpPointSearch:
                 self.ruudukko[nykyinen_y][nykyinen_x].jumppoint = True
                 return nykyinen_y, nykyinen_x
                 
-
             elif self.ruudukko[nykyinen_y][nykyinen_x-suunta_x].seina and not self.ruudukko[nykyinen_y+suunta_y][nykyinen_x-suunta_x].seina:
                 self.ruudukko[nykyinen_y][nykyinen_x].jumppoint = True
                 return nykyinen_y, nykyinen_x

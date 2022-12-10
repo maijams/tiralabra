@@ -9,6 +9,7 @@ class Dijkstra:
         self.reitti = []
         self.laskuri = 0
     
+    
     def etsi_lyhin(self):
         while len(self.jono) > 0:
             etaisyys, laskuri, ruutu = heappop(self.jono)
@@ -31,6 +32,7 @@ class Dijkstra:
                         naapuri.jonossa = True
                         heappush(self.jono, (naapuri.etaisyys, self.laskuri, naapuri))
                 return False
+      
         
     def etsi_naapurit(self):
         korkeus = len(self.ruudukko)
