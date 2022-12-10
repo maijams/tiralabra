@@ -15,7 +15,6 @@ KELTAINEN = (200,200,0)
 PINKKI = (235,52,189)
 
 
-
 class Kayttoliittyma:
     def __init__(self, ikkuna):
         self.ikkuna = ikkuna
@@ -70,7 +69,6 @@ class Kayttoliittyma:
         
         
     def kaynnista(self):
-        # Kartan & reitin piirtämisen alustus
         leveys, korkeus = self.alusta_kartta_ja_ruudukko()
         
         self.nollaa_haku()
@@ -78,7 +76,7 @@ class Kayttoliittyma:
         fontti = pygame.font.SysFont("Arial", 24)
         ohjeteksti = "Valitse lähtöpiste klikkaamalla kartan mustalla alueella. Toinen klikkaus valitsee loppupisteen."
         ohje = fontti.render(ohjeteksti, True, VALKOINEN)
-        ohjeteksti2 = "Käynnistä haku numeropainikkeilla:   1 = Dijkstra,   2 = JPS"
+        ohjeteksti2 = "Käynnistä haku numeropainikkeilla:   1 = Dijkstra,   2 = JPS,   5 = Nollaa haku"
         ohje2 = fontti.render(ohjeteksti2, True, VALKOINEN)
         positio_kartta = (100,100) #(x,y)
         skaalauskerroin = 9
@@ -151,10 +149,10 @@ class Kayttoliittyma:
                                 self.pikselikartta[x,y] = KELTAINEN
                             if ruutu.vierailtu:
                                 self.pikselikartta[x,y] = TURKOOSI
-                            if ruutu.jumppoint:
-                                self.pikselikartta[x,y] = PINKKI
                             if ruutu in self.haku.reitti:
                                 self.pikselikartta[x,y] = SININEN
+                            if ruutu.jumppoint:
+                                self.pikselikartta[x,y] = PINKKI
                                 
                         if ruutu.alku:
                             self.pikselikartta[x,y] = PUNAINEN
@@ -163,23 +161,22 @@ class Kayttoliittyma:
                             
                 self.kuva.save("reitti.png")
             
+            
+            if self.valittu_algo != None:
+                self.ikkuna.blit(fontti.render(f'Valittu {self.valittu_algo}', True, VALKOINEN), (1200,300))
+                
+                
             if self.loytyi:
                 self.piirra = False
                 self.etsi = False
                 
-                if self.valittu_algo == "Dijkstra":
-                    pituus = f'Reitin pituus: {str(len(self.haku.reitti))} ruutua'
-                    tulos_pituus = fontti.render(pituus, True, VALKOINEN)
-                    self.ikkuna.blit(tulos_pituus, (1200,400))
-                    
-                elif self.valittu_algo == "JPS":
-                    pituus = f'Reitin pituus: {str(self.haku.loppu.etaisyys)} ruutua'
-                    tulos_pituus = fontti.render(pituus, True, VALKOINEN)
-                    self.ikkuna.blit(tulos_pituus, (1200,400))
-                    
-                    solmut = f'Vieraillut solmut: {str(len(self.haku.reitti))} kpl'
-                    tulos_solmut = fontti.render(solmut, True, VALKOINEN)
-                    self.ikkuna.blit(tulos_solmut, (1200,500))
+                pituus = f'Reitin pituus: {str(len(self.haku.reitti))} ruutua'
+                tulos_pituus = fontti.render(pituus, True, VALKOINEN)
+                self.ikkuna.blit(tulos_pituus, (1200,400))
+        
+                solmut = f'Vieraillut solmut: {str(len(self.haku.vieraillut))} kpl'
+                tulos_solmut = fontti.render(solmut, True, VALKOINEN)
+                self.ikkuna.blit(tulos_solmut, (1200,500))
                 
                 aika = f'Haun kesto: {aika_loppu - aika_alku} s'
                 tulos_aika = fontti.render(aika, True, VALKOINEN)
@@ -190,9 +187,6 @@ class Kayttoliittyma:
             self.ikkuna.blit(kartta, positio_kartta)
             self.ikkuna.blit(ohje, (20,20))
             self.ikkuna.blit(ohje2, (20,60))
-            
-            if self.valittu_algo != None:
-                self.ikkuna.blit(fontti.render(f'Valittu {self.valittu_algo}', True, VALKOINEN), (1200,300))
             
 
             # Värien selitteet

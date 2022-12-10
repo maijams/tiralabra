@@ -4,6 +4,7 @@ class Dijkstra:
     def __init__(self, ruudukko, jono):
         self.ruudukko = ruudukko
         self.jono = jono
+        self.vieraillut = []
         self.reitti = []
         self.laskuri = 0
     
@@ -11,10 +12,12 @@ class Dijkstra:
         while len(self.jono) > 0:
             etaisyys, ruutu = heappop(self.jono)
             ruutu.vierailtu = True
+            self.vieraillut.append(ruutu)
             if ruutu.maali:
                 while not ruutu.alku:
                     self.reitti.append(ruutu.edellinen)
                     ruutu = ruutu.edellinen
+                self.reitti.append(ruutu)
                 return True
             else:
                 for naapuri in ruutu.naapurit:

@@ -11,6 +11,7 @@ class JumpPointSearch:
         self.alku = alku
         self.loppu = loppu
         self.jono = jono
+        self.vieraillut = []
         self.reitti = []
         self.laskuri = 0
 
@@ -97,8 +98,6 @@ class JumpPointSearch:
                 return nykyinen_y, nykyinen_x
             
                 
-                    
-    
     def etsi_lyhin(self):
         while len(self.jono) > 0:
             etaisyyss, laskuri, ruuutu = heappop(self.jono)
@@ -127,15 +126,40 @@ class JumpPointSearch:
                 return False
             
             except ReittiLoytyi:
-                self.palauta_reitti()
+                self.palauta_vieraillut()
+                self.palauta_koko_reitti(self.vieraillut)
                 return True
                 
     
-    def palauta_reitti(self):
+    def palauta_vieraillut(self):
         ruutu = self.loppu
-        #print(ruutu.etaisyys)
+        self.vieraillut = [self.loppu]
         while ruutu.edellinen != self.alku:
-            self.reitti.append(ruutu.edellinen)
+            self.vieraillut.append(ruutu.edellinen)
             ruutu = ruutu.edellinen
+        self.vieraillut.append(self.alku)
+        self.vieraillut.reverse()
+            
+            
+    def palauta_koko_reitti(self, solmut):
+        if len(solmut) == 0:
+            return []
+        ruutu_y = solmut[0].y        
+        ruutu_x = solmut[0].x
+        reitti = [solmut[0]]
+        for i in range(len(solmut)-1):
+            while ruutu_y != solmut[i+1].y or ruutu_x != solmut[i+1].x:
+                ruutu_y += self.laske(solmut[i+1].y - solmut[i].y)
+                ruutu_x += self.laske(solmut[i+1].x - solmut[i].x)
+                reitti.append(self.ruudukko[ruutu_y][ruutu_x])
+        self.reitti = reitti[:]
         
+        
+    def laske(self, n):
+        if n > 0: 
+            return 1
+        elif n < 0:
+            return -1
+        else:
+            return 0
         
