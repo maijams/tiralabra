@@ -3,6 +3,7 @@ from PIL import Image
 from ruutu import Ruutu
 from dijkstra import Dijkstra
 from jps import JumpPointSearch
+from astar import AStar
 import time
 
 MUSTA = (0,0,0)
@@ -60,7 +61,7 @@ class Kayttoliittyma:
     def aseta_alku(self, y, x):
         self.alku = self.ruudukko[y][x]
         self.alku.alku = True
-        self.alku.vierailtu = True
+        #self.alku.vierailtu = True
         self.alku.etaisyys = 0
         
     def aseta_loppu(self, y, x):    
@@ -76,7 +77,7 @@ class Kayttoliittyma:
         fontti = pygame.font.SysFont("Arial", 24)
         ohjeteksti = "Valitse lähtöpiste klikkaamalla kartan mustalla alueella. Toinen klikkaus valitsee loppupisteen."
         ohje = fontti.render(ohjeteksti, True, VALKOINEN)
-        ohjeteksti2 = "Käynnistä haku numeropainikkeilla:   1 = Dijkstra,   2 = JPS,   5 = Nollaa haku"
+        ohjeteksti2 = "Käynnistä haku numeropainikkeilla:   1 = Dijkstra,   2 = A*,   3 = JPS,   5 = Nollaa haku"
         ohje2 = fontti.render(ohjeteksti2, True, VALKOINEN)
         positio_kartta = (100,100) #(x,y)
         skaalauskerroin = 9
@@ -108,18 +109,29 @@ class Kayttoliittyma:
                         self.alusta_kartta_ja_ruudukko()
                         self.nollaa_haku()
                         self.valittu_algo = "Dijkstra"
-                        jono = [(0, self.alku)]
+                        jono = [(0, 0, self.alku)]
                         self.haku = Dijkstra(self.ruudukko, jono)
                         self.haku.etsi_naapurit()
                         self.etsi = True
+                        #aika_alku = time.time()
                         
                     elif tapahtuma.key == pygame.K_2:
+                        self.alusta_kartta_ja_ruudukko()
+                        self.nollaa_haku()
+                        self.valittu_algo = "A*"
+                        jono = [(0, 0, self.alku)]
+                        self.haku = AStar(self.loppu, self.ruudukko, jono)
+                        self.haku.etsi_naapurit()
+                        self.etsi = True
+                            
+                    elif tapahtuma.key == pygame.K_3:
                         self.alusta_kartta_ja_ruudukko()
                         self.nollaa_haku()
                         self.valittu_algo = "JPS"
                         jono = [(0, 0, self.alku)]
                         self.haku = JumpPointSearch(self.ruudukko, self.alku, self.loppu, jono)
                         self.etsi = True
+                        #aika_alku = time.time()
                         
                     elif tapahtuma.key == pygame.K_5:
                         self.alku = None
@@ -129,11 +141,13 @@ class Kayttoliittyma:
                         
                 if tapahtuma.type == pygame.QUIT:
                     exit()
-                    
-                                
-            if self.etsi:
-                aika_alku = time.time()
-                self.loytyi = self.haku.etsi_lyhin()
+            
+            if self.etsi:  
+                aika_alku = time.time()             
+                while self.etsi:
+                    self.loytyi = self.haku.etsi_lyhin()
+                    if self.loytyi:
+                        self.etsi = False
                 aika_loppu = time.time()
 
             # Ikkunan piirtäminen
@@ -143,7 +157,6 @@ class Kayttoliittyma:
                 for y in range(korkeus):
                     for x in range(leveys):
                         ruutu = self.ruudukko[y][x]
-                        
                         if self.valittu_algo != None:
                             if ruutu.jonossa:
                                 self.pikselikartta[x,y] = KELTAINEN
@@ -167,6 +180,7 @@ class Kayttoliittyma:
                 
                 
             if self.loytyi:
+                
                 self.piirra = False
                 self.etsi = False
                 
@@ -178,7 +192,7 @@ class Kayttoliittyma:
                 tulos_solmut = fontti.render(solmut, True, VALKOINEN)
                 self.ikkuna.blit(tulos_solmut, (1200,500))
                 
-                aika = f'Haun kesto: {aika_loppu - aika_alku} s'
+                aika = f'Haun kesto: {((aika_loppu-aika_alku)*1000):.4f} ms'
                 tulos_aika = fontti.render(aika, True, VALKOINEN)
                 self.ikkuna.blit(tulos_aika, (1200, 600))
                 
@@ -188,6 +202,12 @@ class Kayttoliittyma:
             self.ikkuna.blit(ohje, (20,20))
             self.ikkuna.blit(ohje2, (20,60))
             
+            if self.alku != None and self.loppu != None:
+                alku = fontti.render(f'Alku     Y: {self.alku.y},  X: {self.alku.x}', True, VALKOINEN)
+                self.ikkuna.blit(alku, (1200, 700))
+                loppu = fontti.render(f'Loppu   Y: {self.loppu.y},  X: {self.loppu.x}', True, VALKOINEN)
+                self.ikkuna.blit(loppu, (1200, 750))
+                
 
             # Värien selitteet
             self.ikkuna.blit(fontti.render("lähtö", True, PUNAINEN), (100,1040))

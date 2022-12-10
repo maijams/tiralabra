@@ -1,8 +1,10 @@
 from heapq import heappush, heappop
+from math import sqrt
 
 
-class Dijkstra:
-    def __init__(self, ruudukko, jono):
+class AStar:
+    def __init__(self, loppu, ruudukko, jono):
+        self.loppu = loppu
         self.ruudukko = ruudukko
         self.jono = jono
         self.vieraillut = []
@@ -27,9 +29,10 @@ class Dijkstra:
                     if not naapuri.jonossa:
                         self.laskuri += 1
                         naapuri.etaisyys = ruutu.etaisyys + 1
+                        euklidinen = sqrt((naapuri.y-self.loppu.y)**2 + (naapuri.x-self.loppu.x)**2)
                         naapuri.edellinen = ruutu
                         naapuri.jonossa = True
-                        heappush(self.jono, (naapuri.etaisyys, self.laskuri, naapuri))
+                        heappush(self.jono, (naapuri.etaisyys + euklidinen, self.laskuri, naapuri))
                 return False
         
     def etsi_naapurit(self):

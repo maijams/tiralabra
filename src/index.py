@@ -3,7 +3,7 @@ from kayttoliittyma import Kayttoliittyma
 
 
 def main():
-    IKKUNAN_LEVEYS = 2100
+    IKKUNAN_LEVEYS = 1700
     IKKUNAN_KORKEUS = 1100
     ikkuna = pygame.display.set_mode((IKKUNAN_LEVEYS, IKKUNAN_KORKEUS))
     
