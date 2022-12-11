@@ -1,5 +1,8 @@
 # Tiralabra 2022 - Periodi 2
 
+## Reitinhakualgoritmien vertailu
+Prokekti on tehty osana tietojenkäsittelytieteiden opintoja, Helsingin yliopiston kurssille *Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit*
+
 ## Dokumentaatio
 
 - [Määrittelydokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/maarittelydokumentti.md)
@@ -13,15 +16,23 @@
 - [Viikkoraportti 2](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/viikkoraportit/viikko2.md)
 - [Viikkoraportti 3](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/viikkoraportit/viikko3.md)
 - [Viikkoraportti 4](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/viikkoraportit/viikko4.md)
+- [Viikkoraportti 5](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/viikkoraportit/viikko5.md)
+- [Viikkoraportti 6](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/viikkoraportit/viikko6.md)
 
 
 ## Ohjelman asennus 
 
-Riippuvuudet voi asentaa komennolla:
+Asenna projekti koneellesi komennolla:
+```
+git clone git@github.com:maijams/tiralabra.git
+```
+
+Asenna riippuvuudet komennolla:
 ```
 poetry install
 ```
-Käynnistä ohjelma hakemistossa **src** komennolla:
+
+Käynnistä ohjelma projektin juurihakemistossa komennolla:
 ```
-poetry run python3 index.py
+poetry run python3 src/index.py
 ```
