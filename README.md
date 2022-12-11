@@ -8,6 +8,7 @@ Prokekti on tehty osana tietojenkäsittelytieteiden opintoja, Helsingin yliopist
 - [Määrittelydokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/maarittelydokumentti.md)
 - [Toteutusdokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/toteutusdokumentti.md)
 - [Testausdokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/testausdokumentti.md)
+- [Käyttöohje](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/kayttoohje.md)
 
 
 ## Viikkoraportit
@@ -20,19 +21,3 @@ Prokekti on tehty osana tietojenkäsittelytieteiden opintoja, Helsingin yliopist
 - [Viikkoraportti 6](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/viikkoraportit/viikko6.md)
 
 
-## Ohjelman asennus 
-
-Asenna projekti koneellesi komennolla:
-```
-git clone git@github.com:maijams/tiralabra.git
-```
-
-Asenna riippuvuudet komennolla:
-```
-poetry install
-```
-
-Käynnistä ohjelma projektin juurihakemistossa komennolla:
-```
-poetry run python3 src/index.py
-```

@@ -1,5 +1,6 @@
 # Toteutusdokumentti
 
+Ohjelman graafinen käyttöliittymä on toteutettu Pythonin Pygame-kirjaston avulla. Reitinhaun karttoina käytetään mustavalkoisia png-kuvia, joihin piirretään vuorotellen eri hakualgoritmien eteneminen.
 
 ## Lähteet
 
