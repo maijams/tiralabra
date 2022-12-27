@@ -50,7 +50,8 @@ class Kayttoliittyma:
         self.loytyi = False
         self.valittu_algo = None
         self.haku = None
-        
+        self.animaatio = False
+                
         self.alusta_kartta_ja_ruudukko(self.kartta)
         self.luo_ruudukko()
     
@@ -169,6 +170,31 @@ class Kayttoliittyma:
                         self.etsi = False
                 aika_loppu = time.time()
 
+            # Animaatio
+            # if self.valittu_algo is not None and self.etsi == False:
+            #     if not self.animaatio:
+            #         algoritmi = self.valittu_algo
+                    
+            #         self.nollaa_haku()
+            #         self.valittu_algo = algoritmi
+            #         print(self.ruudukko)
+            #         self.animaatio = True
+                    
+            #         if self.valittu_algo == "Dijkstra":
+            #             self.haku = Dijkstra(self.ruudukko, jono)
+            #             self.haku.etsi_naapurit()
+            #         elif self.valittu_algo == "A*":
+            #             self.haku = AStar(self.loppu, self.ruudukko, jono)
+            #             self.haku.etsi_naapurit()
+            #         elif self.valittu_algo == "JPS":
+            #             self.haku = JumpPointSearch(self.ruudukko, self.alku, self.loppu, jono)
+                
+            # if self.animaatio:    
+            #     self.loytyi = self.haku.etsi_lyhin()
+            #     if self.loytyi:
+            #         self.animaatio = False
+
+            
             # Ikkunan piirtäminen
             self.ikkuna.fill(MUSTA)
             
