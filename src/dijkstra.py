@@ -1,10 +1,11 @@
 from heapq import heappush, heappop
-
+from math import sqrt
 
 class Dijkstra:
-    def __init__(self, ruudukko, jono):
+    def __init__(self, ruudukko, alku):
+        self.nimi = "Dijkstra"
         self.ruudukko = ruudukko
-        self.jono = jono
+        self.jono = [(0, 0, alku)]
         self.vieraillut = []
         self.reitti = []
         self.laskuri = 0
@@ -24,22 +25,17 @@ class Dijkstra:
                 self.reitti.append(ruutu)
                 return True
             else:
-                for naapuri in ruutu.naapurit:
-                    if not naapuri.jonossa:
+                suunnat = [(0,1), (1,0), (0,-1), (-1,0), (1,1), (-1,1), (-1,-1), (1,-1)]
+                for suunta in suunnat:
+                    naapuri = self.ruudukko[ruutu.y+suunta[0]][ruutu.x+suunta[1]]
+                    if not naapuri.seina and not naapuri.jonossa and not naapuri.vierailtu:
                         self.laskuri += 1
-                        naapuri.etaisyys = ruutu.etaisyys + 1
+                        if (ruutu.y - naapuri.y) == 0 or (ruutu.x - naapuri.x) == 0:
+                            uusi = 1
+                        else:
+                            uusi = sqrt(2)
+                        naapuri.etaisyys = ruutu.etaisyys + uusi
                         naapuri.edellinen = ruutu
                         naapuri.jonossa = True
                         heappush(self.jono, (naapuri.etaisyys, self.laskuri, naapuri))
                 return False
-      
-        
-    def etsi_naapurit(self):
-        korkeus = len(self.ruudukko)
-        leveys = len(self.ruudukko[0])
-        
-        for y in range(korkeus):
-            for x in range(leveys):
-                ruutu = self.ruudukko[y][x]
-                if not ruutu.seina:
-                    ruutu.lisaa_naapurit(self.ruudukko)

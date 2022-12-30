@@ -1,4 +1,5 @@
 import pygame
+from renderoija import Renderoija
 from kayttoliittyma import Kayttoliittyma
 
 
@@ -8,10 +9,11 @@ def main():
     ikkuna = pygame.display.set_mode((IKKUNAN_LEVEYS, IKKUNAN_KORKEUS))
     
     pygame.display.set_caption("Reitinhaku")
-    
-    kayttoliittyma = Kayttoliittyma(ikkuna)
-    
     pygame.init()
+    
+    renderoija = Renderoija(ikkuna)
+    kayttoliittyma = Kayttoliittyma(renderoija)
+    
     kayttoliittyma.kaynnista()
     
     

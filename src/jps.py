@@ -6,11 +6,11 @@ class ReittiLoytyi(Exception):
 
 
 class JumpPointSearch:
-    def __init__(self, ruudukko, alku, loppu, jono):
+    def __init__(self, ruudukko, alku, loppu):
+        self.nimi = "JPS"
         self.ruudukko = ruudukko
-        self.alku = alku
         self.loppu = loppu
-        self.jono = jono
+        self.jono = [(0, 0, alku)]
         self.vieraillut = []
         self.reitti = []
         self.laskuri = 0
@@ -28,9 +28,9 @@ class JumpPointSearch:
             ruutu = self.ruudukko[nyky_y][nyky_x]
             
             if not ruutu.seina and not ruutu.vierailtu:
-                ruutu.etaisyys = etaisyys
-                ruutu.edellinen = alku
                 ruutu.vierailtu = True
+                ruutu.edellinen = alku
+                ruutu.etaisyys = etaisyys
                 if ruutu.maali:
                     raise ReittiLoytyi()
             else:  # Jos törmätään seinään tai aiempiin tutkittuun osaan
@@ -62,9 +62,9 @@ class JumpPointSearch:
             ruutu = self.ruudukko[nyky_y][nyky_x]
             
             if not ruutu.seina and not ruutu.vierailtu:
-                ruutu.etaisyys = etaisyys
-                ruutu.edellinen = alku
                 ruutu.vierailtu = True
+                ruutu.edellinen = alku
+                ruutu.etaisyys = etaisyys
                 if ruutu.maali:
                     raise ReittiLoytyi()
             else:  # Jos törmätään seinään tai aiempiin tutkittuun osaan
@@ -74,7 +74,6 @@ class JumpPointSearch:
             if self.ruudukko[nyky_y-suunta_y][nyky_x].seina and not self.ruudukko[nyky_y-suunta_y][nyky_x+suunta_x].seina:
                 self.lisaa_jumppoint(ruutu)
                 return
-            
             elif self.ruudukko[nyky_y][nyky_x-suunta_x].seina and not self.ruudukko[nyky_y+suunta_y][nyky_x-suunta_x].seina:
                 self.lisaa_jumppoint(ruutu)
                 return
@@ -84,26 +83,16 @@ class JumpPointSearch:
             
                 
     def etsi_lyhin(self):
-        #print("haku")
-        while len(self.jono) > 0:
+        if len(self.jono) > 0:
             etaisyys, laskuri, ruutu = heappop(self.jono)
-            #print(ruuutu)
-            #print(etaisyyss)
-            #print(self.jono)
             xy_suunnat = [(0,1), (1,0), (0,-1), (-1,0)]
             diag_suunnat = [(1,1), (-1,1), (-1,-1), (1,-1)]
-            if ruutu.alku:
-                ruutu.vierailtu = True
-            
             try:
                 for suunta in xy_suunnat:
-                    #print(suunta, ruutu, etaisyys)
                     self.vaaka_ja_pystyhaku(ruutu, suunta[0], suunta[1])
                 for suunta in diag_suunnat:
-                    #print(suunta, ruutu, etaisyys)
                     self.diagonaalihaku(ruutu, suunta[0], suunta[1])
                 return False
-            
             except ReittiLoytyi:
                 self.palauta_vieraillut()
                 self.palauta_koko_reitti(self.vieraillut)
@@ -119,22 +108,21 @@ class JumpPointSearch:
     
     def palauta_vieraillut(self):
         ruutu = self.loppu
-        self.vieraillut = [self.loppu]
-        while ruutu.edellinen != self.alku:
-            self.vieraillut.append(ruutu.edellinen)
+        while not ruutu.alku:
+            self.vieraillut.append(ruutu)
             ruutu = ruutu.edellinen
-        self.vieraillut.append(self.alku)
+        self.vieraillut.append(ruutu)
         self.vieraillut.reverse()
             
             
-    def palauta_koko_reitti(self, solmut):
-        ruutu_y = solmut[0].y        
-        ruutu_x = solmut[0].x
-        self.reitti = [solmut[0]]
-        for i in range(len(solmut)-1):
-            while ruutu_y != solmut[i+1].y or ruutu_x != solmut[i+1].x:
-                ruutu_y += self.reitin_suunta(solmut[i+1].y - solmut[i].y)
-                ruutu_x += self.reitin_suunta(solmut[i+1].x - solmut[i].x)
+    def palauta_koko_reitti(self, vieraillut):
+        ruutu_y = vieraillut[0].y        
+        ruutu_x = vieraillut[0].x
+        self.reitti.append(vieraillut[0])
+        for i in range(len(vieraillut)-1):
+            while ruutu_y != vieraillut[i+1].y or ruutu_x != vieraillut[i+1].x:
+                ruutu_y += self.reitin_suunta(vieraillut[i+1].y - vieraillut[i].y)
+                ruutu_x += self.reitin_suunta(vieraillut[i+1].x - vieraillut[i].x)
                 self.reitti.append(self.ruudukko[ruutu_y][ruutu_x])
         
         

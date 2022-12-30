@@ -3,10 +3,11 @@ from math import sqrt
 
 
 class AStar:
-    def __init__(self, loppu, ruudukko, jono):
-        self.loppu = loppu
+    def __init__(self, ruudukko, alku, loppu):
+        self.nimi = "A*"
         self.ruudukko = ruudukko
-        self.jono = jono
+        self.loppu = loppu
+        self.jono = [(0, 0, alku)]
         self.vieraillut = []
         self.reitti = []
         self.laskuri = 0
@@ -26,23 +27,18 @@ class AStar:
                 self.reitti.append(ruutu)
                 return True
             else:
-                for naapuri in ruutu.naapurit:
-                    if not naapuri.jonossa:
+                suunnat = [(0,1), (1,0), (0,-1), (-1,0), (1,1), (-1,1), (-1,-1), (1,-1)]
+                for suunta in suunnat:
+                    naapuri = self.ruudukko[ruutu.y+suunta[0]][ruutu.x+suunta[1]]
+                    if not naapuri.seina and not naapuri.jonossa and not naapuri.vierailtu:
                         self.laskuri += 1
-                        naapuri.etaisyys = ruutu.etaisyys + 1
-                        euklidinen = sqrt((naapuri.y-self.loppu.y)**2 + (naapuri.x-self.loppu.x)**2)
+                        if (ruutu.y - naapuri.y) == 0 or (ruutu.x - naapuri.x) == 0:
+                            uusi = 1
+                        else:
+                            uusi = sqrt(2)
+                        naapuri.etaisyys = ruutu.etaisyys + uusi
                         naapuri.edellinen = ruutu
                         naapuri.jonossa = True
-                        heappush(self.jono, (naapuri.etaisyys + euklidinen, self.laskuri, naapuri))
+                        manhattan = max(abs(naapuri.y-self.loppu.y), abs(naapuri.x-self.loppu.x))
+                        heappush(self.jono, (naapuri.etaisyys + manhattan, self.laskuri, naapuri))
                 return False
-        
-        
-    def etsi_naapurit(self):
-        korkeus = len(self.ruudukko)
-        leveys = len(self.ruudukko[0])
-        
-        for y in range(korkeus):
-            for x in range(leveys):
-                ruutu = self.ruudukko[y][x]
-                if not ruutu.seina:
-                    ruutu.lisaa_naapurit(self.ruudukko)
