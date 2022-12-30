@@ -11,8 +11,7 @@ class AStar:
         self.vieraillut = []
         self.reitti = []
         self.laskuri = 0
-    
-    
+
     def etsi_lyhin(self):
         while len(self.jono) > 0:
             etaisyys, laskuri, ruutu = heappop(self.jono)
@@ -27,9 +26,11 @@ class AStar:
                 self.reitti.append(ruutu)
                 return True
             else:
-                suunnat = [(0,1), (1,0), (0,-1), (-1,0), (1,1), (-1,1), (-1,-1), (1,-1)]
+                suunnat = [(0, 1), (1, 0), (0, -1), (-1, 0),
+                           (1, 1), (-1, 1), (-1, -1), (1, -1)]
                 for suunta in suunnat:
-                    naapuri = self.ruudukko[ruutu.y+suunta[0]][ruutu.x+suunta[1]]
+                    naapuri = self.ruudukko[ruutu.y +
+                                            suunta[0]][ruutu.x+suunta[1]]
                     if not naapuri.seina and not naapuri.jonossa and not naapuri.vierailtu:
                         self.laskuri += 1
                         if (ruutu.y - naapuri.y) == 0 or (ruutu.x - naapuri.x) == 0:
@@ -39,6 +40,8 @@ class AStar:
                         naapuri.etaisyys = ruutu.etaisyys + uusi
                         naapuri.edellinen = ruutu
                         naapuri.jonossa = True
-                        manhattan = max(abs(naapuri.y-self.loppu.y), abs(naapuri.x-self.loppu.x))
-                        heappush(self.jono, (naapuri.etaisyys + manhattan, self.laskuri, naapuri))
+                        manhattan = max(abs(naapuri.y-self.loppu.y),
+                                        abs(naapuri.x-self.loppu.x))
+                        heappush(self.jono, (naapuri.etaisyys +
+                                 manhattan, self.laskuri, naapuri))
                 return False

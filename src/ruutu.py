@@ -11,7 +11,6 @@ class Ruutu:
         self.naapurit = []
         self.etaisyys = None
         self.jumppoint = False
-     
-        
+
     def __str__(self):
         return f"{(self.y, self.x)}"
