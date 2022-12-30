@@ -1,11 +1,11 @@
+import time
+import os
 import pygame
 from PIL import Image
 from ruutu import Ruutu
 from dijkstra import Dijkstra
 from jps import JumpPointSearch
 from astar import AStar
-import time
-import os
 
 
 MUSTA = (0, 0, 0)
@@ -44,7 +44,7 @@ class Kayttoliittyma:
             self.kasittele_tapahtumat()
             if self.etsi:
                 self.aika = self.suorita_algoritmi()
-            if self.animoitu and not self.animaatio_valmis and self.algoritmi != None:
+            if self.animoitu and not self.animaatio_valmis and self.algoritmi is not None:
                 self.suorita_animaatio()
             if self.paivita_karttaa:
                 self.paivita_kartta()
@@ -67,13 +67,13 @@ class Kayttoliittyma:
 
                 if x_kartta in range(self.leveys) and y_kartta in range(self.korkeus):
                     ruutu = self.ruudukko[y_kartta][x_kartta]
-                    if self.alku == None and not ruutu.seina:
+                    if self.alku is None and not ruutu.seina:
                         self.aseta_alku(y_kartta, x_kartta)
-                    elif self.loppu == None and not ruutu.seina:
+                    elif self.loppu is None and not ruutu.seina:
                         self.aseta_loppu(y_kartta, x_kartta)
 
             # Algoritmim valinta
-            elif tapahtuma.type == pygame.KEYDOWN and self.loppu != None:
+            elif tapahtuma.type == pygame.KEYDOWN and self.loppu is not None:
                 if tapahtuma.key == pygame.K_0:
                     self.alku = None
                     self.loppu = None
@@ -133,14 +133,14 @@ class Kayttoliittyma:
             rivi = []
             for x in range(self.leveys):
                 ruutu = Ruutu(y, x)
-                # Ruutu on seinää jos sen RGB-arvojen summa on tarpeeksi suuri (=ruutu riittävän vaalea)
+                # Ruutu on seinää jos sen RGB-arvojen summa on tarpeeksi suuri
                 if sum(self.pikselikartta[x, y]) > 735:
                     ruutu.seina = True
                 rivi.append(ruutu)
             self.ruudukko.append(rivi)
-        if self.alku != None:
+        if self.alku is not None:
             self.aseta_alku(self.alku.y, self.alku.x)
-        if self.loppu != None:
+        if self.loppu is not None:
             self.aseta_loppu(self.loppu.y, self.loppu.x)
 
     def aseta_alku(self, y, x):
@@ -183,7 +183,7 @@ class Kayttoliittyma:
         for y in range(self.korkeus):
             for x in range(self.leveys):
                 ruutu = self.ruudukko[y][x]
-                if self.algoritmi != None:
+                if self.algoritmi is not None:
                     if ruutu.jonossa:
                         self.pikselikartta[x, y] = KELTAINEN
                     if ruutu.vierailtu:

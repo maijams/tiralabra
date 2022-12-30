@@ -1,9 +1,9 @@
-from PIL import Image
 import time
 import os
-from ruutu import Ruutu
 from random import randint
 from statistics import mean
+from PIL import Image
+from ruutu import Ruutu
 from astar import AStar
 from dijkstra import Dijkstra
 from jps import JumpPointSearch
@@ -17,7 +17,7 @@ Toteutus
 -> 15 x 100 x 3 x 10 = 45000 mittausta
 - Suositeltu kesto
 
-Tallennus 
+Tallennus
 - 15 x 3 = 45 -> eroja samassa karttakoossa?
 -  5 x 3 = 15 -> kuvaajaan
 - Epäonnistuneiden lkm ja laatu -> %
@@ -25,8 +25,8 @@ Tallennus
 
 '''
 
-reitit_per_kartta = 10
-toistot_per_reitti = 10
+reitit_per_kartta = 1
+toistot_per_reitti = 1
 
 kartta100_1 = {}
 kartta100_2 = {}
@@ -83,14 +83,14 @@ class Suorituskyky:
             rivi = []
             for x in range(self.leveys):
                 ruutu = Ruutu(y, x)
-                # Ruutu on seinää jos sen RGB-arvojen summa on tarpeeksi suuri (=ruutu riittävän vaalea)
+                # Ruutu on seinää jos sen RGB-arvojen summa on tarpeeksi suuri
                 if sum(self.pikselikartta[x, y]) > 735:
                     ruutu.seina = True
                 rivi.append(ruutu)
             self.ruudukko.append(rivi)
-        if self.alku != None:
+        if self.alku is not None:
             self.aseta_alku(self.alku.y, self.alku.x)
-        if self.loppu != None:
+        if self.loppu is not None:
             self.aseta_loppu(self.loppu.y, self.loppu.x)
 
     def valitse_pisteet(self):
@@ -107,17 +107,16 @@ class Suorituskyky:
         return alku_y, alku_x, loppu_y, loppu_x
 
     def nollaa_haku(self):
+        self.algoritmi = None
         self.etsi = False
         self.loytyi = False
-        self.valittu_algo = None
-        self.haku = None
 
-        self.alusta_kartta_ja_ruudukko(self.kartta)
+        self.alusta_kartta()
         self.luo_ruudukko()
 
-    def alusta_kartta_ja_ruudukko(self, kartta):
+    def alusta_kartta(self):
         polku = os.path.dirname(__file__)
-        kuva = os.path.join(polku, 'kartat', kartta)
+        kuva = os.path.join(polku, 'kartat', self.kartta)
         self.kuva = Image.open(kuva)
         self.kuva.save("reitti.png")
         self.pikselikartta = self.kuva.load()
@@ -136,14 +135,14 @@ class Suorituskyky:
         for i in range(14):
             self.kartta = kartat[i]["tiedosto"]
 
-            for j in range(reitit_per_kartta):
+            for _ in range(reitit_per_kartta):
                 self.nollaa_haku()
                 alku_y, alku_x, loppu_y, loppu_x = self.valitse_pisteet()
                 self.aseta_alku(alku_y, alku_x)
                 self.aseta_loppu(loppu_y, loppu_x)
 
                 ajat = []
-                for k in range(toistot_per_reitti):
+                for _ in range(toistot_per_reitti):
                     self.nollaa_haku()
                     self.etsi = True
                     self.haku = Dijkstra(self.ruudukko, self.alku)
@@ -154,7 +153,7 @@ class Suorituskyky:
                 kartat[i]["pituudet"].append(pituus_dijkstra)
 
                 ajat = []
-                for k in range(toistot_per_reitti):
+                for _ in range(toistot_per_reitti):
                     self.nollaa_haku()
                     self.etsi = True
                     self.haku = AStar(self.ruudukko, self.alku, self.loppu)
@@ -165,7 +164,7 @@ class Suorituskyky:
                     kartat[i]["astar_virheet"] += 1
 
                 ajat = []
-                for k in range(toistot_per_reitti):
+                for _ in range(toistot_per_reitti):
                     self.nollaa_haku()
                     self.etsi = True
                     self.haku = JumpPointSearch(

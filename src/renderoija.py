@@ -23,11 +23,11 @@ class Renderoija:
         self._piirra_kayttoohje(animoitu)
         self._piirra_varien_selitteet(algoritmi)
 
-        if alku != None:
+        if alku is not None:
             self._piirra_alkupisteen_tiedot(alku)
-        if loppu != None:
+        if loppu is not None:
             self._piirra_loppupisteen_tiedot(loppu)
-        if algoritmi != None:
+        if algoritmi is not None:
             self._piirra_valittu_algo(algoritmi)
         if loytyi:
             self._piirra_hakutulos(loppu, algoritmi, aika)

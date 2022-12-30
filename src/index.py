@@ -4,9 +4,9 @@ from kayttoliittyma import Kayttoliittyma
 
 
 def main():
-    IKKUNAN_LEVEYS = 1700
-    IKKUNAN_KORKEUS = 1100
-    ikkuna = pygame.display.set_mode((IKKUNAN_LEVEYS, IKKUNAN_KORKEUS))
+    ikkunan_leveys = 1700
+    ikkunan_korkeus = 1100
+    ikkuna = pygame.display.set_mode((ikkunan_leveys, ikkunan_korkeus))
 
     pygame.display.set_caption("Reitinhaku")
     pygame.init()

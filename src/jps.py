@@ -40,14 +40,16 @@ class JumpPointSearch:
             suunnat = [1, -1]
             if suunta_y == 0:
                 for suunta in suunnat:
-                    if self.ruudukko[nyky_y+suunta][nyky_x].seina and not self.ruudukko[nyky_y+suunta][nyky_x+suunta_x].seina:
-                        self.lisaa_jumppoint(ruutu)
-                        return
+                    if self.ruudukko[nyky_y+suunta][nyky_x].seina:
+                        if not self.ruudukko[nyky_y+suunta][nyky_x+suunta_x].seina:
+                            self.lisaa_jumppoint(ruutu)
+                            return
             elif suunta_x == 0:
                 for suunta in suunnat:
-                    if self.ruudukko[nyky_y][nyky_x+suunta].seina and not self.ruudukko[nyky_y+suunta_y][nyky_x+suunta].seina:
-                        self.lisaa_jumppoint(ruutu)
-                        return
+                    if self.ruudukko[nyky_y][nyky_x+suunta].seina:
+                        if not self.ruudukko[nyky_y+suunta_y][nyky_x+suunta].seina:
+                            self.lisaa_jumppoint(ruutu)
+                            return
 
     def diagonaalihaku(self, alku, suunta_y, suunta_x):
         nyky_y = alku.y
@@ -70,19 +72,21 @@ class JumpPointSearch:
                 return
 
             # Tarkistetaan naapuriruutujen avulla onko nykyinen ruutu jump point
-            if self.ruudukko[nyky_y-suunta_y][nyky_x].seina and not self.ruudukko[nyky_y-suunta_y][nyky_x+suunta_x].seina:
-                self.lisaa_jumppoint(ruutu)
-                return
-            elif self.ruudukko[nyky_y][nyky_x-suunta_x].seina and not self.ruudukko[nyky_y+suunta_y][nyky_x-suunta_x].seina:
-                self.lisaa_jumppoint(ruutu)
-                return
+            if self.ruudukko[nyky_y-suunta_y][nyky_x].seina:
+                if not self.ruudukko[nyky_y-suunta_y][nyky_x+suunta_x].seina:
+                    self.lisaa_jumppoint(ruutu)
+                    return
+            elif self.ruudukko[nyky_y][nyky_x-suunta_x].seina:
+                if not self.ruudukko[nyky_y+suunta_y][nyky_x-suunta_x].seina:
+                    self.lisaa_jumppoint(ruutu)
+                    return
 
             self.vaaka_ja_pystyhaku(ruutu, suunta_y, 0)
             self.vaaka_ja_pystyhaku(ruutu, 0, suunta_x)
 
     def etsi_lyhin(self):
         if len(self.jono) > 0:
-            etaisyys, laskuri, ruutu = heappop(self.jono)
+            ruutu = heappop(self.jono)[2]
             xy_suunnat = [(0, 1), (1, 0), (0, -1), (-1, 0)]
             diag_suunnat = [(1, 1), (-1, 1), (-1, -1), (1, -1)]
             try:
@@ -123,10 +127,9 @@ class JumpPointSearch:
                     vieraillut[i+1].x - vieraillut[i].x)
                 self.reitti.append(self.ruudukko[ruutu_y][ruutu_x])
 
-    def reitin_suunta(self, n):
-        if n > 0:
+    def reitin_suunta(self, erotus):
+        if erotus > 0:
             return 1
-        elif n < 0:
+        if erotus < 0:
             return -1
-        else:
-            return 0
+        return 0
