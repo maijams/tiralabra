@@ -24,7 +24,8 @@ class Dijkstra:
             suunnat = [(0, 1), (1, 0), (0, -1), (-1, 0),
                        (1, 1), (-1, 1), (-1, -1), (1, -1)]
             for suunta in suunnat:
-                naapuri = self.ruudukko[ruutu.y + suunta[0]][ruutu.x+suunta[1]]
+                naapuri = self.ruudukko[ruutu.y +
+                                        suunta[0]][ruutu.x+suunta[1]]
                 if not naapuri.seina and not naapuri.jonossa and not naapuri.vierailtu:
                     self.laskuri += 1
                     if (ruutu.y - naapuri.y) == 0 or (ruutu.x - naapuri.x) == 0:
@@ -35,11 +36,11 @@ class Dijkstra:
                     naapuri.edellinen = ruutu
                     naapuri.jonossa = True
                     heappush(self.jono, (naapuri.etaisyys,
-                             self.laskuri, naapuri))
+                                         self.laskuri, naapuri))
             return False
 
     def _palauta_reitti(self, ruutu):
         while not ruutu.alku:
-            self.reitti.append(ruutu.edellinen)
+            self.reitti.append(ruutu)
             ruutu = ruutu.edellinen
         self.reitti.append(ruutu)

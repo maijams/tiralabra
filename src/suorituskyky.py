@@ -1,5 +1,6 @@
 import time
 import os
+import csv
 from random import randint
 from statistics import mean
 from PIL import Image
@@ -25,32 +26,8 @@ Tallennus
 
 '''
 
-reitit_per_kartta = 1
-toistot_per_reitti = 1
 
-kartta100_1 = {}
-kartta100_2 = {}
-kartta100_3 = {}
-kartta200_1 = {}
-kartta200_2 = {}
-kartta200_3 = {}
-kartta300_1 = {}
-kartta300_2 = {}
-kartta300_3 = {}
-kartta400_1 = {}
-kartta400_2 = {}
-kartta400_3 = {}
-kartta500_1 = {}
-kartta500_2 = {}
-kartta500_3 = {}
-
-kartat = [
-    kartta100_1, kartta100_2, kartta100_3,
-    kartta200_1, kartta200_2, kartta200_3,
-    kartta300_1, kartta300_2, kartta300_3,
-    kartta400_1, kartta400_2, kartta400_3,
-    kartta500_1, kartta500_2, kartta500_3,
-]
+kartat = []
 
 kartta_tiedostot = [
     "kartta100_1.png", "kartta100_2.png", "kartta100_3.png",
@@ -61,17 +38,23 @@ kartta_tiedostot = [
 ]
 
 for i in range(14):
-    kartat[i]["tiedosto"] = kartta_tiedostot[i]
-    kartat[i]["dijkstra_aika"] = []
-    kartat[i]["astar_aika"] = []
-    kartat[i]["jps_aika"] = []
-    kartat[i]["astar_virheet"] = 0
-    kartat[i]["jps_virheet"] = 0
-    kartat[i]["pituudet"] = []
+    kartta = {}
+    kartta["tiedosto"] = kartta_tiedostot[i]
+    kartta["dijkstra_aika"] = []
+    kartta["astar_aika"] = []
+    kartta["jps_aika"] = []
+    kartta["astar_virheet"] = 0
+    kartta["jps_virheet"] = 0
+    kartta["astar_pituudet"] = []
+    kartta["jps_pituudet"] = []
+    kartta["pituudet"] = []
+    kartat.append(kartta)
 
 
 class Suorituskyky:
-    def __init__(self):
+    def __init__(self, reitit_per_kartta, toistot_per_reitti):
+        self.reitit_lkm = reitit_per_kartta
+        self.toistot_lkm = toistot_per_reitti
         self.ruudukko = []
         self.alku = None
         self.loppu = None
@@ -95,12 +78,12 @@ class Suorituskyky:
 
     def valitse_pisteet(self):
         while True:
-            alku_y = randint(0, self.leveys-1)
+            alku_y = randint(0, self.korkeus-1)
             alku_x = randint(0, self.leveys-1)
             if not self.ruudukko[alku_y][alku_x].seina:
                 break
         while True:
-            loppu_y = randint(0, self.leveys-1)
+            loppu_y = randint(0, self.korkeus-1)
             loppu_x = randint(0, self.leveys-1)
             if not self.ruudukko[loppu_y][loppu_x].seina:
                 break
@@ -111,10 +94,10 @@ class Suorituskyky:
         self.etsi = False
         self.loytyi = False
 
-        self.alusta_kartta()
+        self.hae_kartta()
         self.luo_ruudukko()
 
-    def alusta_kartta(self):
+    def hae_kartta(self):
         polku = os.path.dirname(__file__)
         kuva = os.path.join(polku, 'kartat', self.kartta)
         self.kuva = Image.open(kuva)
@@ -135,45 +118,30 @@ class Suorituskyky:
         for i in range(14):
             self.kartta = kartat[i]["tiedosto"]
 
-            for _ in range(reitit_per_kartta):
+            for _ in range(self.reitit_lkm):
                 self.nollaa_haku()
                 alku_y, alku_x, loppu_y, loppu_x = self.valitse_pisteet()
                 self.aseta_alku(alku_y, alku_x)
                 self.aseta_loppu(loppu_y, loppu_x)
 
-                ajat = []
-                for _ in range(toistot_per_reitti):
-                    self.nollaa_haku()
-                    self.etsi = True
-                    self.haku = Dijkstra(self.ruudukko, self.alku)
-                    aika = self.suorita_haku()
-                    ajat.append(aika)
+                ajat = self.mittaus("Dijkstra")
                 kartat[i]["dijkstra_aika"].append(mean(ajat))
-                pituus_dijkstra = len(self.haku.reitti)
+                pituus_dijkstra = round(self.loppu.etaisyys, 0)
                 kartat[i]["pituudet"].append(pituus_dijkstra)
 
-                ajat = []
-                for _ in range(toistot_per_reitti):
-                    self.nollaa_haku()
-                    self.etsi = True
-                    self.haku = AStar(self.ruudukko, self.alku, self.loppu)
-                    aika = self.suorita_haku()
-                    ajat.append(aika)
+                ajat = self.mittaus("A*")
                 kartat[i]["astar_aika"].append(mean(ajat))
-                if len(self.haku.reitti) != pituus_dijkstra:
+                pituus_astar = round(self.loppu.etaisyys, 0)
+                if pituus_astar != pituus_dijkstra:
                     kartat[i]["astar_virheet"] += 1
+                kartat[i]["astar_pituudet"].append(pituus_astar)
 
-                ajat = []
-                for _ in range(toistot_per_reitti):
-                    self.nollaa_haku()
-                    self.etsi = True
-                    self.haku = JumpPointSearch(
-                        self.ruudukko, self.alku, self.loppu)
-                    aika = self.suorita_haku()
-                    ajat.append(aika)
+                ajat = self.mittaus("JPS")
                 kartat[i]["jps_aika"].append(mean(ajat))
-                if len(self.haku.reitti) != pituus_dijkstra:
+                pituus_jps = round(self.loppu.etaisyys, 0)
+                if pituus_jps != pituus_dijkstra:
                     kartat[i]["jps_virheet"] += 1
+                kartat[i]["jps_pituudet"].append(pituus_jps)
 
             print(kartat[i]["tiedosto"])
             print("dijkstra", mean(kartat[i]["dijkstra_aika"])*1000, "ms")
@@ -181,10 +149,60 @@ class Suorituskyky:
             print("jps", mean(kartat[i]["jps_aika"])*1000, "ms")
             print("astar virheet", kartat[i]["astar_virheet"], "kpl")
             print("jps virheet", kartat[i]["jps_virheet"], "kpl")
+            print("pituus ka astar", mean(kartat[i]["astar_pituudet"]))
+            print("pituus ka jps", mean(kartat[i]["jps_pituudet"]))
             print("pituus ka", mean(kartat[i]["pituudet"]))
             print("pituus min", min(kartat[i]["pituudet"]))
             print("pituus max", max(kartat[i]["pituudet"]))
             print()
+            
+        with open("data.csv", "w", newline="") as csvfile:
+            otsikot = (
+                'tiedosto,'
+                'dijkstra_aika ms,'
+                'astar_aika ms,'
+                'jps_aika ms,'
+                'astar virheet,'
+                'jps virheet,'
+                'pituus ka astar,'
+                'pituus ka jps,'
+                'pituus ka,'
+                'pituus min,'
+                'pituus max'
+                '\n'
+                )
+            csvfile.write(otsikot)
+            
+            for kartta in kartat:
+                csvfile.write(
+                    f'{kartta["tiedosto"]},'
+                    f'{mean(kartta["dijkstra_aika"])*1000},'
+                    f'{mean(kartta["astar_aika"])*1000},'
+                    f'{mean(kartta["jps_aika"])*1000},'
+                    f'{kartta["astar_virheet"]},'
+                    f'{kartta["jps_virheet"]},'
+                    f'{mean(kartta["astar_pituudet"])},'
+                    f'{mean(kartta["jps_pituudet"])},'
+                    f'{mean(kartta["pituudet"])},'
+                    f'{min(kartta["pituudet"])},'
+                    f'{max(kartta["pituudet"])},'
+                    f'\n')
+
+    def mittaus(self, algoritmi):
+        ajat = []
+        for _ in range(self.toistot_lkm):
+            self.nollaa_haku()
+            self.etsi = True
+            if algoritmi == "Dijkstra":
+                self.haku = Dijkstra(self.ruudukko, self.alku)
+            elif algoritmi == "A*":
+                self.haku = AStar(self.ruudukko, self.alku, self.loppu)
+            if algoritmi == "JPS":
+                self.haku = JumpPointSearch(
+                    self.ruudukko, self.alku, self.loppu)
+            aika = self.suorita_haku()
+            ajat.append(aika)
+        return ajat
 
     def suorita_haku(self):
         if self.etsi:
@@ -198,5 +216,5 @@ class Suorituskyky:
 
 
 if __name__ == "__main__":
-    testi = Suorituskyky()
+    testi = Suorituskyky(5, 3)
     testi.kaynnista()

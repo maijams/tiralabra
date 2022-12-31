@@ -24,3 +24,7 @@ def format(ctx):
 @task
 def lint(ctx):
     ctx.run("pylint src", pty=True)
+    
+@task
+def suorituskyky(ctx):
+    ctx.run("python3 src/suorituskyky.py", pty=True)

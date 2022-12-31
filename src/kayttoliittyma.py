@@ -8,8 +8,6 @@ from jps import JumpPointSearch
 from astar import AStar
 
 
-MUSTA = (0, 0, 0)
-VALKOINEN = (255, 255, 255)
 PUNAINEN = (255, 0, 0)
 VIHREA = (0, 255, 0)
 SININEN = (0, 0, 255)
@@ -29,7 +27,7 @@ kartat = [
 class Kayttoliittyma:
     def __init__(self, renderoija):
         self.renderoija = renderoija
-        self.kartta = kartat[0]
+        self.kartta = kartat[6]
         self.ruudukko = []
         self.alku = None
         self.loppu = None
@@ -38,7 +36,6 @@ class Kayttoliittyma:
 
     def kaynnista(self):
         self.nollaa_haku()
-        self.positio_kartta = (100, 100)  # (x,y)
 
         while True:
             self.kasittele_tapahtumat()
@@ -56,14 +53,13 @@ class Kayttoliittyma:
                 self.paivita_karttaa = False
 
     def kasittele_tapahtumat(self):
+        positio_kartta = (100, 100)  # (x,y)
         for tapahtuma in pygame.event.get():
             # Alku- ja loppupisteen valinta
             if tapahtuma.type == pygame.MOUSEBUTTONDOWN:
                 x, y = tapahtuma.pos
-                x_kartta = round(
-                    (x-self.positio_kartta[0]) / self.skaalauskerroin)
-                y_kartta = round(
-                    (y-self.positio_kartta[1]) / self.skaalauskerroin)
+                x_kartta = round((x-positio_kartta[0]) / self.skaalauskerroin)
+                y_kartta = round((y-positio_kartta[1]) / self.skaalauskerroin)
 
                 if x_kartta in range(self.leveys) and y_kartta in range(self.korkeus):
                     ruutu = self.ruudukko[y_kartta][x_kartta]
@@ -78,7 +74,6 @@ class Kayttoliittyma:
                     self.alku = None
                     self.loppu = None
                     self.nollaa_haku()
-
                 elif tapahtuma.key in (pygame.K_1, pygame.K_2, pygame.K_3):
                     self.nollaa_haku()
                     self.etsi = True
@@ -115,10 +110,10 @@ class Kayttoliittyma:
         self.loytyi = False
         self.animaatio_valmis = False
 
-        self.alusta_kartta()
+        self.hae_kartta()
         self.luo_ruudukko()
 
-    def alusta_kartta(self):
+    def hae_kartta(self):
         polku = os.path.dirname(__file__)
         kuva = os.path.join(polku, 'kartat', self.kartta)
         self.kuva = Image.open(kuva)
