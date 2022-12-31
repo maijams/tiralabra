@@ -33,6 +33,19 @@ class Kayttoliittyma:
         self.loppu = None
         self.aika = None
         self.animoitu = False
+        self.algoritmi = None
+        self.paivita_karttaa = True
+        self.etsi = False
+        self.loytyi = False
+        self.animaatio_valmis = False
+        self.kuva = None
+        self.pikselikartta = None
+        self.leveys = None
+        self.korkeus = None
+        self.skaalauskerroin = None
+
+        self.hae_kartta()
+        self.luo_ruudukko()
 
     def kaynnista(self):
         self.nollaa_haku()

@@ -3,4 +3,5 @@ __pycache__
 .coverage
 htmlcov
 src/reitti.png
-testi.py
+data.csv
+.~lock.data.csv#
