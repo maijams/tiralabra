@@ -37,10 +37,17 @@ class Suorituskyky:
     def __init__(self, reitit_per_kartta, toistot_per_reitti):
         self.reitit_lkm = reitit_per_kartta
         self.toistot_lkm = toistot_per_reitti
+        self.kartta = ""
         self.ruudukko = []
         self.alku = None
         self.loppu = None
-        self.kartta = ""
+        self.algoritmi = None
+        self.etsi = False
+        self.loytyi = False
+        self.kuva = None
+        self.pikselikartta = None
+        self.leveys = None
+        self.korkeus = None
 
     def luo_ruudukko(self):
         self.ruudukko = []
@@ -72,7 +79,6 @@ class Suorituskyky:
         return alku_y, alku_x, loppu_y, loppu_x
 
     def nollaa_haku(self):
-        self.algoritmi = None
         self.etsi = False
         self.loytyi = False
 
@@ -126,9 +132,9 @@ class Suorituskyky:
                 kartta["jps_pituudet"].append(pituus_jps)
 
             self.tulosta_tulokset(kartta)
-            
+
         self.tallenna_tiedostoon(kartat)
-    
+
     def tulosta_tulokset(self, kartta):
         print(kartta["tiedosto"])
         print("reitit:", self.reitit_lkm, "kpl")
@@ -144,8 +150,8 @@ class Suorituskyky:
         print("pituus min:", min(kartta["pituudet"]))
         print("pituus max:", max(kartta["pituudet"]))
         print()
-        
-    def tallenna_tiedostoon(self, kartat):        
+
+    def tallenna_tiedostoon(self, kartat):
         with open("data.csv", "w", newline="") as csvfile:
             otsikot = (
                 'tiedostonimi,'
@@ -162,9 +168,9 @@ class Suorituskyky:
                 'pituus min,'
                 'pituus max'
                 '\n'
-                )
+            )
             csvfile.write(otsikot)
-            
+
             for kartta in kartat:
                 csvfile.write(
                     f'{kartta["tiedosto"]},'
@@ -181,18 +187,18 @@ class Suorituskyky:
                     f'{min(kartta["pituudet"])},'
                     f'{max(kartta["pituudet"])},'
                     f'\n')
-        
+
     def mittaus(self, algoritmi):
         ajat = []
         for _ in range(self.toistot_lkm):
             self.nollaa_haku()
             self.etsi = True
             if algoritmi == "Dijkstra":
-                self.haku = Dijkstra(self.ruudukko, self.alku)
+                self.algoritmi = Dijkstra(self.ruudukko, self.alku)
             elif algoritmi == "A*":
-                self.haku = AStar(self.ruudukko, self.alku, self.loppu)
+                self.algoritmi = AStar(self.ruudukko, self.alku, self.loppu)
             if algoritmi == "JPS":
-                self.haku = JumpPointSearch(
+                self.algoritmi = JumpPointSearch(
                     self.ruudukko, self.alku, self.loppu)
             aika = self.suorita_haku()
             ajat.append(aika)
@@ -202,12 +208,11 @@ class Suorituskyky:
         if self.etsi:
             aika_alku = time.time()
             while self.etsi:
-                self.loytyi = self.haku.etsi_lyhin()
+                self.loytyi = self.algoritmi.etsi_lyhin()
                 if self.loytyi:
                     self.etsi = False
             aika_loppu = time.time()
         return aika_loppu-aika_alku
-
 
 
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ kartat = [
     "kartta200_1.png", "kartta200_2.png", "kartta200_3.png",
     "kartta300_1.png", "kartta300_2.png", "kartta300_3.png",
     "kartta400_1.png", "kartta400_2.png", "kartta400_3.png",
-    "kartta500_1.png", "kartta500_2.png"
+    "kartta500_1.png", "kartta500_2.png", "kartta500_3.png"
 ]
 
 
@@ -48,8 +48,6 @@ class Kayttoliittyma:
         self.luo_ruudukko()
 
     def kaynnista(self):
-        self.nollaa_haku()
-
         while True:
             self.kasittele_tapahtumat()
             if self.etsi:
