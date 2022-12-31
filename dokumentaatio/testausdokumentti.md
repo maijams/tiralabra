@@ -2,7 +2,12 @@
 
 ## Yksikkötestaus
 
-Ohjelmalle on tehty yksikkötestausta algoritmien toiminnan kannalta oleellisiin tiedostoihin. Yksikkötestauksen ulkopuolelle on jätetty käyttöliittymään ja suorituskykymittaukseen liittyvät tiedostot. Yksikkötestit voi suorittaa projektin virtuaaliympäristössä komennolla:
+Ohjelmalle on tehty yksikkötestausta algoritmien toiminnan kannalta oleellisiin tiedostoihin. Yksikkötestauksen ulkopuolelle on jätetty käyttöliittymään ja suorituskykymittaukseen liittyvät tiedostot. 
+
+Testikattavuusraportti:
+![Screenshot from 2022-12-31 23-59-03](https://user-images.githubusercontent.com/96269683/210156360-efa144bf-f2e1-49ca-bf8f-c3b4ed11a252.png)
+
+Yksikkötestit voi suorittaa projektin virtuaaliympäristössä komennolla:
 
 ``` invoke test ```
 
