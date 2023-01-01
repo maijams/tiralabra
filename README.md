@@ -3,12 +3,17 @@
 ## Reitinhakualgoritmien vertailu
 Prokekti on tehty osana tietojenkäsittelytieteiden opintoja, Helsingin yliopiston kurssille *Aineopintojen harjoitustyö: Tietorakenteet ja algoritmit*
 
+## Releaset
+
+- [Loppupalautus](https://github.com/maijams/tiralabra/releases/tag/loppupalautus)
+
 ## Dokumentaatio
 
 - [Määrittelydokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/maarittelydokumentti.md)
-- [Toteutusdokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/toteutusdokumentti.md)
-- [Testausdokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/testausdokumentti.md)
 - [Käyttöohje](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/kayttoohje.md)
+- [Testausdokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/testausdokumentti.md)
+- [Toteutusdokumentti](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/toteutusdokumentti.md)
+
 
 
 ## Viikkoraportit
