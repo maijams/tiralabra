@@ -25,6 +25,12 @@ kartat = [
 
 
 class Kayttoliittyma:
+    '''Luokka joka sisältää ohjelman käyttöliittymän.
+    
+    Parametrit:
+        renderoija: Pygame-ikkunan piirtämisestä huolehtiva olio.
+    '''
+    
     def __init__(self, renderoija):
         self.renderoija = renderoija
         self.kartta = kartat[0]
@@ -44,18 +50,20 @@ class Kayttoliittyma:
         self.korkeus = None
         self.skaalauskerroin = None
 
-        self.hae_kartta()
-        self.luo_ruudukko()
+        self._hae_kartta()
+        self._luo_ruudukko()
 
     def kaynnista(self):
+        '''Huolehtii ohjelman perusloopista.'''
+        
         while True:
-            self.kasittele_tapahtumat()
+            self._kasittele_tapahtumat()
             if self.etsi:
-                self.aika = self.suorita_algoritmi()
+                self.aika = self._suorita_algoritmi()
             if self.animoitu and not self.animaatio_valmis and self.algoritmi is not None:
-                self.suorita_animaatio()
+                self._suorita_animaatio()
             if self.paivita_karttaa:
-                self.paivita_kartta()
+                self._paivita_kartta()
 
             self.renderoija.renderoi(
                 self.animoitu, self.algoritmi, self.alku, self.loppu, self.loytyi, self.aika)
@@ -63,7 +71,9 @@ class Kayttoliittyma:
             if self.loytyi:
                 self.paivita_karttaa = False
 
-    def kasittele_tapahtumat(self):
+    def _kasittele_tapahtumat(self):
+        '''Käyttäjän antamien komentojen käsittely.'''
+        
         positio_kartta = (100, 100)  # (x,y)
         for tapahtuma in pygame.event.get():
             # Alku- ja loppupisteen valinta
@@ -75,18 +85,18 @@ class Kayttoliittyma:
                 if x_kartta in range(self.leveys) and y_kartta in range(self.korkeus):
                     ruutu = self.ruudukko[y_kartta][x_kartta]
                     if self.alku is None and not ruutu.seina:
-                        self.aseta_alku(y_kartta, x_kartta)
+                        self._aseta_alku(y_kartta, x_kartta)
                     elif self.loppu is None and not ruutu.seina:
-                        self.aseta_loppu(y_kartta, x_kartta)
+                        self._aseta_loppu(y_kartta, x_kartta)
 
             # Algoritmim valinta
             elif tapahtuma.type == pygame.KEYDOWN and self.loppu is not None:
                 if tapahtuma.key == pygame.K_0:
                     self.alku = None
                     self.loppu = None
-                    self.nollaa_haku()
+                    self._nollaa_haku()
                 elif tapahtuma.key in (pygame.K_d, pygame.K_s, pygame.K_j):
-                    self.nollaa_haku()
+                    self._nollaa_haku()
                     self.etsi = True
                     if tapahtuma.key == pygame.K_d:
                         self.algoritmi = Dijkstra(self.ruudukko, self.alku)
@@ -100,23 +110,23 @@ class Kayttoliittyma:
             # Kartan valinta
             if tapahtuma.type == pygame.KEYDOWN:
                 if tapahtuma.key == pygame.K_1:
-                    self.valitse_kartta(kartat[0])
+                    self._valitse_kartta(kartat[0])
                 elif tapahtuma.key == pygame.K_2:
-                    self.valitse_kartta(kartat[1])
+                    self._valitse_kartta(kartat[1])
                 elif tapahtuma.key == pygame.K_3:
-                    self.valitse_kartta(kartat[2])
+                    self._valitse_kartta(kartat[2])
                 elif tapahtuma.key == pygame.K_4:
-                    self.valitse_kartta(kartat[3])
+                    self._valitse_kartta(kartat[3])
                 elif tapahtuma.key == pygame.K_5:
-                    self.valitse_kartta(kartat[4])
+                    self._valitse_kartta(kartat[4])
                 elif tapahtuma.key == pygame.K_6:
-                    self.valitse_kartta(kartat[5])
+                    self._valitse_kartta(kartat[5])
                 elif tapahtuma.key == pygame.K_7:
-                    self.valitse_kartta(kartat[6])
+                    self._valitse_kartta(kartat[6])
                 elif tapahtuma.key == pygame.K_8:
-                    self.valitse_kartta(kartat[7])
+                    self._valitse_kartta(kartat[7])
                 elif tapahtuma.key == pygame.K_9:
-                    self.valitse_kartta(kartat[8])
+                    self._valitse_kartta(kartat[8])
                 elif tapahtuma.key == pygame.K_a:
                     if self.animoitu:
                         self.animoitu = False
@@ -126,17 +136,23 @@ class Kayttoliittyma:
             if tapahtuma.type == pygame.QUIT:
                 exit()
 
-    def nollaa_haku(self):
+    def _nollaa_haku(self):
+        '''Nollaa reitinhakuun liittyvät parametrit kartan ja algoritmin vaihdon yhteydessä.
+        Samalla alustetaan uusi kartta ja luodaan ruudukko reitinhakua varten.'''
+        
         self.algoritmi = None
         self.paivita_karttaa = True
         self.etsi = False
         self.loytyi = False
         self.animaatio_valmis = False
 
-        self.hae_kartta()
-        self.luo_ruudukko()
+        self._hae_kartta()
+        self._luo_ruudukko()
 
-    def hae_kartta(self):
+    def _hae_kartta(self):
+        '''Hakee kartan tiedoston ja tallentaa siitä kopion tiedostoon "reitti.png".
+        Otetaan talteen pikselikartta ja kartan koko.'''
+        
         polku = os.path.dirname(__file__)
         kuva = os.path.join(polku, 'kartat', self.kartta)
         self.kuva = Image.open(kuva)
@@ -145,7 +161,10 @@ class Kayttoliittyma:
         self.leveys, self.korkeus = self.kuva.size
         self.skaalauskerroin = 900/self.korkeus
 
-    def luo_ruudukko(self):
+    def _luo_ruudukko(self):
+        '''Alustetaan uutta reitinhakua varten koskematon 
+        ruudukkomatriisi, joka koostuu Ruutu-olioista.'''
+        
         self.ruudukko = []
         for y in range(self.korkeus):
             rivi = []
@@ -157,20 +176,40 @@ class Kayttoliittyma:
                 rivi.append(ruutu)
             self.ruudukko.append(rivi)
         if self.alku is not None:
-            self.aseta_alku(self.alku.y, self.alku.x)
+            self._aseta_alku(self.alku.y, self.alku.x)
         if self.loppu is not None:
-            self.aseta_loppu(self.loppu.y, self.loppu.x)
+            self._aseta_loppu(self.loppu.y, self.loppu.x)
 
-    def aseta_alku(self, y, x):
+    def _aseta_alku(self, y, x):
+        '''Päivittää alkupisteen tiedot yhdelle ruudukon Ruutu-oliolle.
+        
+        Parametrit:
+            y: Alkupisteen y-koordinaatti kartalla
+            x: Alkupisteen x-koordinaatti kartalla
+        '''
+        
         self.alku = self.ruudukko[y][x]
         self.alku.alku = True
         self.alku.etaisyys = 0
 
-    def aseta_loppu(self, y, x):
+    def _aseta_loppu(self, y, x):
+        '''Päivittää loppupisteen tiedot yhdelle ruudukon Ruutu-oliolle.
+        
+        Parametrit:
+            y: Loppupisteen y-koordinaatti kartalla
+            x: Loppupisteen x-koordinaatti kartalla
+        '''
+        
         self.loppu = self.ruudukko[y][x]
         self.loppu.maali = True
 
-    def suorita_algoritmi(self):
+    def _suorita_algoritmi(self):
+        '''Algoritmin suoritus ja aikamittaus.
+        
+        Palauttaa:
+            Algoritmin suoritukseen kulunut aika
+        '''
+        
         aika_alku = time.time()
         while self.etsi:
             self.loytyi = self.algoritmi.etsi_lyhin()
@@ -179,10 +218,12 @@ class Kayttoliittyma:
         aika_loppu = time.time()
         return aika_loppu - aika_alku
 
-    def suorita_animaatio(self):
+    def _suorita_animaatio(self):
+        '''Animaation suorittaminen.'''
+        
         if self.loytyi:
             algoritmi = self.algoritmi.nimi
-            self.nollaa_haku()
+            self._nollaa_haku()
 
             if algoritmi == "Dijkstra":
                 self.algoritmi = Dijkstra(self.ruudukko, self.alku)
@@ -197,7 +238,11 @@ class Kayttoliittyma:
             if self.loytyi:
                 self.animaatio_valmis = True
 
-    def paivita_kartta(self):
+    def _paivita_kartta(self):
+        '''Pikselikartan värittäminen ruudukon sisältämien Ruutu-olioiden
+        ominaisuuksien perusteella. Väritetty kuva tallennetaan "reitti.png"-
+        tiedostoon.'''
+        
         for y in range(self.korkeus):
             for x in range(self.leveys):
                 ruutu = self.ruudukko[y][x]
@@ -216,10 +261,12 @@ class Kayttoliittyma:
                     self.pikselikartta[x, y] = VIHREA
         self.kuva.save("reitti.png")
 
-    def valitse_kartta(self, kartta):
+    def _valitse_kartta(self, kartta):
+        '''Kartan vaihtamiseen liittyvien parametrin päivitys & haun nollaus.'''
+        
         if self.kartta == kartta:
             return
         self.kartta = kartta
         self.alku = None
         self.loppu = None
-        self.nollaa_haku()
+        self._nollaa_haku()

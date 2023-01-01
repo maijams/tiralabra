@@ -3,6 +3,14 @@ from math import sqrt
 
 
 class AStar:
+    '''Luokka joka huolehtii A* algoritmin toiminnasta.
+    
+    Parametrit:
+        ruudukko: Matriisi reitinhakua varten
+        alku: Reitinhaun aloitusruutu
+        loppu: Reitinhaun lopetusruutu
+    '''
+    
     def __init__(self, ruudukko, alku, loppu):
         self.nimi = "A*"
         self.ruudukko = ruudukko
@@ -13,6 +21,11 @@ class AStar:
         self.laskuri = 0
 
     def etsi_lyhin(self):
+        '''Algoritmin suoritus.
+        
+        Palauttaa True jos reitti löytyy, False jos reittiä ei löydy.
+        '''
+        
         while len(self.jono) > 0:
             ruutu = heappop(self.jono)[2]
             if ruutu.vierailtu:
@@ -44,6 +57,8 @@ class AStar:
             return False
 
     def _palauta_reitti(self, ruutu):
+        '''Käy läpi reitin varrella olevat ruudut ja lisää ne listaan.'''
+    
         while not ruutu.alku:
             self.reitti.append(ruutu)
             ruutu = ruutu.edellinen

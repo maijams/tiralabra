@@ -34,6 +34,13 @@ for kartta_tiedosto in kartta_tiedostot:
 
 
 class Suorituskyky:
+    '''Suorituskyvyn mittauksesta vastaava luokka.
+    
+    Parametrit:
+        reitit_per_kartta: Yhdelle kartalle suoritettavien reitinhakujen määrä
+        toistot_per_reitti: Yhdelle reitille suoritettavien toistomittausten määrä
+    '''
+    
     def __init__(self, reitit_per_kartta, toistot_per_reitti):
         self.reitit_lkm = reitit_per_kartta
         self.toistot_lkm = toistot_per_reitti
@@ -49,7 +56,10 @@ class Suorituskyky:
         self.leveys = None
         self.korkeus = None
 
-    def luo_ruudukko(self):
+    def _luo_ruudukko(self):
+        '''Alustetaan uutta reitinhakua varten koskematon 
+        ruudukkomatriisi, joka koostuu Ruutu-olioista.'''
+        
         self.ruudukko = []
         for y in range(self.korkeus):
             rivi = []
@@ -61,11 +71,16 @@ class Suorituskyky:
                 rivi.append(ruutu)
             self.ruudukko.append(rivi)
         if self.alku is not None:
-            self.aseta_alku(self.alku.y, self.alku.x)
+            self._aseta_alku(self.alku.y, self.alku.x)
         if self.loppu is not None:
-            self.aseta_loppu(self.loppu.y, self.loppu.x)
+            self._aseta_loppu(self.loppu.y, self.loppu.x)
 
-    def valitse_pisteet(self):
+    def _valitse_pisteet(self):
+        '''Valitsee kartalta satunnaiset alku- ja loppupisteet.
+        
+        Palauttaa alku- ja loppupisteiden koordinaatit.
+        '''
+        
         while True:
             alku_y = randint(0, self.korkeus-1)
             alku_x = randint(0, self.leveys-1)
@@ -78,14 +93,20 @@ class Suorituskyky:
                 break
         return alku_y, alku_x, loppu_y, loppu_x
 
-    def nollaa_haku(self):
+    def _nollaa_haku(self):
+        '''Nollaa reitinhakuun liittyvät parametrit kartan ja algoritmin vaihdon yhteydessä.
+        Samalla alustetaan uusi kartta ja luodaan ruudukko reitinhakua varten.'''
+        
         self.etsi = False
         self.loytyi = False
 
-        self.hae_kartta()
-        self.luo_ruudukko()
+        self._hae_kartta()
+        self._luo_ruudukko()
 
-    def hae_kartta(self):
+    def _hae_kartta(self):
+        '''Hakee kartan tiedoston ja tallentaa siitä kopion tiedostoon "reitti.png".
+        Otetaan talteen pikselikartta ja kartan koko.'''
+        
         polku = os.path.dirname(__file__)
         kuva = os.path.join(polku, 'kartat', self.kartta)
         self.kuva = Image.open(kuva)
@@ -93,49 +114,67 @@ class Suorituskyky:
         self.pikselikartta = self.kuva.load()
         self.leveys, self.korkeus = self.kuva.size
 
-    def aseta_alku(self, y, x):
+    def _aseta_alku(self, y, x):
+        '''Päivittää alkupisteen tiedot yhdelle ruudukon Ruutu-oliolle.
+        
+        Parametrit:
+            y: Alkupisteen y-koordinaatti kartalla
+            x: Alkupisteen x-koordinaatti kartalla
+        '''
+        
         self.alku = self.ruudukko[y][x]
         self.alku.alku = True
         self.alku.etaisyys = 0
 
-    def aseta_loppu(self, y, x):
+    def _aseta_loppu(self, y, x):
+        '''Päivittää loppupisteen tiedot yhdelle ruudukon Ruutu-oliolle.
+        
+        Parametrit:
+            y: Loppupisteen y-koordinaatti kartalla
+            x: Loppupisteen x-koordinaatti kartalla
+        '''
+        
         self.loppu = self.ruudukko[y][x]
         self.loppu.maali = True
 
     def kaynnista(self):
+        '''Suorituskykymittauksen suorittaminen.'''
+        
         for kartta in kartat:
             self.kartta = kartta["tiedosto"]
 
             for _ in range(self.reitit_lkm):
-                self.nollaa_haku()
-                alku_y, alku_x, loppu_y, loppu_x = self.valitse_pisteet()
-                self.aseta_alku(alku_y, alku_x)
-                self.aseta_loppu(loppu_y, loppu_x)
+                self._nollaa_haku()
+                alku_y, alku_x, loppu_y, loppu_x = self._valitse_pisteet()
+                self._aseta_alku(alku_y, alku_x)
+                self._aseta_loppu(loppu_y, loppu_x)
 
-                ajat = self.mittaus("Dijkstra")
+                ajat = self._mittaus("Dijkstra")
                 kartta["dijkstra_aika"].append(mean(ajat))
                 pituus_dijkstra = round(self.loppu.etaisyys, 0)
                 kartta["pituudet"].append(pituus_dijkstra)
 
-                ajat = self.mittaus("A*")
+                ajat = self._mittaus("A*")
                 kartta["astar_aika"].append(mean(ajat))
                 pituus_astar = round(self.loppu.etaisyys, 0)
                 if pituus_astar != pituus_dijkstra:
                     kartta["astar_virheet"] += 1
                 kartta["astar_pituudet"].append(pituus_astar)
 
-                ajat = self.mittaus("JPS")
+                ajat = self._mittaus("JPS")
                 kartta["jps_aika"].append(mean(ajat))
                 pituus_jps = round(self.loppu.etaisyys, 0)
                 if pituus_jps != pituus_dijkstra:
                     kartta["jps_virheet"] += 1
                 kartta["jps_pituudet"].append(pituus_jps)
 
-            self.tulosta_tulokset(kartta)
+            self._tulosta_tulokset(kartta)
 
-        self.tallenna_tiedostoon(kartat)
+        self._tallenna_tiedostoon(kartat)
 
-    def tulosta_tulokset(self, kartta):
+    def _tulosta_tulokset(self, kartta):
+        '''Tulostaa karttaan liittyvät mittaustulokset.'''
+        
         print(kartta["tiedosto"])
         print("reitit:", self.reitit_lkm, "kpl")
         print("dijkstra:", mean(kartta["dijkstra_aika"])*1000, "ms")
@@ -151,7 +190,9 @@ class Suorituskyky:
         print("pituus max:", max(kartta["pituudet"]))
         print()
 
-    def tallenna_tiedostoon(self, kartat):
+    def _tallenna_tiedostoon(self, kartat):
+        '''Tallentaa karttoihin liittyvät mittaustulokset CSV-tiedostoon.'''
+        
         with open("data.csv", "w", newline="") as csvfile:
             otsikot = (
                 'tiedostonimi,'
@@ -188,10 +229,15 @@ class Suorituskyky:
                     f'{max(kartta["pituudet"])},'
                     f'\n')
 
-    def mittaus(self, algoritmi):
+    def _mittaus(self, algoritmi):
+        '''Reitinhaun toistomittaus valitun algoritmin mukaisesti.
+        
+        Palauttaa kaikki reittiin kohdistuvat toistomittausten ajat listana.
+        '''
+        
         ajat = []
         for _ in range(self.toistot_lkm):
-            self.nollaa_haku()
+            self._nollaa_haku()
             self.etsi = True
             if algoritmi == "Dijkstra":
                 self.algoritmi = Dijkstra(self.ruudukko, self.alku)
@@ -200,11 +246,17 @@ class Suorituskyky:
             if algoritmi == "JPS":
                 self.algoritmi = JumpPointSearch(
                     self.ruudukko, self.alku, self.loppu)
-            aika = self.suorita_haku()
+            aika = self._suorita_haku()
             ajat.append(aika)
         return ajat
 
-    def suorita_haku(self):
+    def _suorita_haku(self):
+        '''Yksittäisen reitinhaun suoritus ja aikamittaus.
+        
+        Palauttaa:
+            Algoritmin suoritukseen kulunut aika
+        '''
+        
         if self.etsi:
             aika_alku = time.time()
             while self.etsi:

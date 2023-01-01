@@ -2,6 +2,6 @@ __pycache__
 .pytest_cache
 .coverage
 htmlcov
-src/reitti.png
+*reitti.png
 data.csv
 .~lock.data.csv#
