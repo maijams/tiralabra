@@ -2,7 +2,12 @@
 
 ## Ohjelman yleisrakenne 
 
-Ohjelman graafinen käyttöliittymä on toteutettu Pythonin Pygame-kirjaston avulla. Reitinhaun karttoina käytetään kuvankäsittelyohjelmalla piirrettyjä mustavalkoisia PNG-kuvia, joiden avulla piirretään vuorotellen eri hakualgoritmien eteneminen.
+Ohjelman graafinen käyttöliittymä on toteutettu Pythonin Pygame-kirjaston avulla. Reitinhaun karttoina käytetään kuvankäsittelyohjelmalla piirrettyjä mustavalkoisia PNG-kuvia, joiden avulla luodaan ruudukko reitinhakualgoritmeja varten. Reitinhaun eteneminen piiretään omaan tiedostoonsa, alkuperäisestä kartasta tehdyn kopion päälle. Algoritmien toiminta ja yksittäiseen ruutuun liittyvät ominaisuudet on toteutettu omissa luokissaan. Pygame-kuvan renderöintiin liittyvät toiminnot on myös eriytetty omaan luokkaansa.
+
+Ohjelman luokkakaavio:
+
+![Screenshot from 2023-01-01 13-29-25](https://user-images.githubusercontent.com/96269683/210169220-486e459f-80db-4e97-8609-2b318231e38b.png)
+
 
 ## Suorituskykyvertailu
 
@@ -14,7 +19,9 @@ Tulosten perusteella A* oli kaikissa kokoluokissa n. 2 kertaa Dijkstraa nopeampi
 
 ![Screenshot from 2023-01-01 01-08-20](https://user-images.githubusercontent.com/96269683/210158081-5c0948c9-d072-4aed-a6e1-402b63cf22b7.png)
 
-Tuloksissa huomionarvoista on se, että A* ja JPS eivät aina onnistuneet lyhyimmän reitin löytämisessä. Tämä on havaittavissa myös sovelluksen empiirisen testauksen yhteydessä. Oikeellisuuden tulkinta riippuu kuitenkin osin siitä, miten etäisyyttä mitataan. Jos etäisyydeksi käsitetään reitissä tapahtuvien ruutujen välisten siirtymien määrä, Dijkstra ja A* päätyvät aina samaan tulokseen. Kuitenkin jos halutaan käyttää reitin todellista pituutta (vaaka- ja pystysiirtymien kustannus = 1, diagonaalisiirtymä = sqrt(2)), A* löytämä reitti on usein hiukan Dijkstraa pidempi. 
+(Huom. Ylläolevassa kuvaajassa solmujen määrä kuvaa ruudukossa olevien ruutujen kokonaismäärää. Verkon todellisten solmujen määrä on kartassa olevien seinien takia tätä pienempi.)
+
+Suorituskykymittauksen tuloksissa huomionarvoista on se, että A* ja JPS eivät aina onnistuneet lyhyimmän reitin löytämisessä. Tämä on havaittavissa myös sovelluksen empiirisen testauksen yhteydessä. Oikeellisuuden tulkinta riippuu kuitenkin osin siitä, miten etäisyyttä mitataan. Jos etäisyydeksi käsitetään reitissä tapahtuvien ruutujen välisten siirtymien määrä, Dijkstra ja A* päätyvät aina samaan tulokseen. Kuitenkin jos halutaan käyttää reitin todellista pituutta (vaaka- ja pystysiirtymien kustannus = 1, diagonaalisiirtymä = sqrt(2)), A* löytämä reitti on usein hiukan Dijkstraa pidempi. 
 
 Sekä A* että JPS kohdalla kokeiltiin useaa eri heuristiikkaa (euclidean, manhattan, octile & Chebyshev), mutta heuristiikan valinnalla ei lopulta vaikuttanut olevan kovin suurta vaikutusta lopputulokseen. Lopullisiksi heuristiikoiksi valikoituvat A*:lle Chebyshev ja JPS:lle euclidean. Graafista käyttöliittymää kokeilemalla voi havaita että A* virheelliset tulokset johtuvat pienistä ylimääräisistä mutkista reitin varrella, jotka johtunevat heuristiikan aiheuttamasta reitin "nojautumisesta" loppupisteen suuntaan. 
 
@@ -22,7 +29,7 @@ Sekä A* että JPS kohdalla virheellisten reittien määrä kasvoi kartan koon k
 
 ## Työn puutteet ja parannusehdotukset
 
-Työn puutteena on edellä mainitut ongelmat algoritmien toiminnassa lyhyimmän reitin löytämisessä. JPS kohdalla tämä on enemmän ominaisuus, mutta A* olisi mahdollisesti ollut vielä jotenkin optimoitavissa niin ettei reittiin synny ylimääräisiä mutkia. Graafisen käyttöliittymän toteutuksen osalta jäi uupumaan JPS-haun animointi.
+Työn puutteena on edellä mainitut ongelmat algoritmien toiminnassa lyhyimmän reitin löytämisessä. JPS kohdalla tämä on enemmän ominaisuus, mutta A* olisi mahdollisesti ollut vielä jotenkin optimoitavissa niin ettei reittiin synny ylimääräisiä mutkia. Graafista käyttöliittymää olisi voinut edelleen kehittää mm. tekemällä JPS animaation hitaammaksi. Ohjelman rakenteen kannalta jäi myös jonkun verran parannettavaa, käyttöliittymästä olisi voinut erottaa omaan luokkaansa mm. ruudukon luomiseen liittyvät toiminnot joita olisi sitten voinut käyttää sellaisenaan myös suorituskykymittauksessa. Käyttöliittymän metodeilla oli kuitenkin niin paljon yhteisiä muuttujia että tuntui etten olisi kovin kaunista ratkaisua saanut kohtuullisessa ajassa aikaiseksi. 
 
 ## Lähteet
 
