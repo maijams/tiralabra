@@ -5,7 +5,7 @@ from kayttoliittyma import Kayttoliittyma
 
 def main():
     '''Alustaa ohjelman suorituksen liittyvät oliot & käynnistää ohjelman.'''
-    
+
     ikkunan_leveys = 1700
     ikkunan_korkeus = 1100
     ikkuna = pygame.display.set_mode((ikkunan_leveys, ikkunan_korkeus))

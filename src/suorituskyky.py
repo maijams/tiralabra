@@ -35,12 +35,12 @@ for kartta_tiedosto in kartta_tiedostot:
 
 class Suorituskyky:
     '''Suorituskyvyn mittauksesta vastaava luokka.
-    
+
     Parametrit:
         reitit_per_kartta: Yhdelle kartalle suoritettavien reitinhakujen määrä
         toistot_per_reitti: Yhdelle reitille suoritettavien toistomittausten määrä
     '''
-    
+
     def __init__(self, reitit_per_kartta, toistot_per_reitti):
         self.reitit_lkm = reitit_per_kartta
         self.toistot_lkm = toistot_per_reitti
@@ -57,9 +57,9 @@ class Suorituskyky:
         self.korkeus = None
 
     def _luo_ruudukko(self):
-        '''Alustetaan uutta reitinhakua varten koskematon 
+        '''Alustetaan uutta reitinhakua varten koskematon
         ruudukkomatriisi, joka koostuu Ruutu-olioista.'''
-        
+
         self.ruudukko = []
         for y in range(self.korkeus):
             rivi = []
@@ -77,10 +77,10 @@ class Suorituskyky:
 
     def _valitse_pisteet(self):
         '''Valitsee kartalta satunnaiset alku- ja loppupisteet.
-        
+
         Palauttaa alku- ja loppupisteiden koordinaatit.
         '''
-        
+
         while True:
             alku_y = randint(0, self.korkeus-1)
             alku_x = randint(0, self.leveys-1)
@@ -96,7 +96,7 @@ class Suorituskyky:
     def _nollaa_haku(self):
         '''Nollaa reitinhakuun liittyvät parametrit kartan ja algoritmin vaihdon yhteydessä.
         Samalla alustetaan uusi kartta ja luodaan ruudukko reitinhakua varten.'''
-        
+
         self.etsi = False
         self.loytyi = False
 
@@ -106,7 +106,7 @@ class Suorituskyky:
     def _hae_kartta(self):
         '''Hakee kartan tiedoston ja tallentaa siitä kopion tiedostoon "reitti.png".
         Otetaan talteen pikselikartta ja kartan koko.'''
-        
+
         polku = os.path.dirname(__file__)
         kuva = os.path.join(polku, 'kartat', self.kartta)
         self.kuva = Image.open(kuva)
@@ -116,30 +116,30 @@ class Suorituskyky:
 
     def _aseta_alku(self, y, x):
         '''Päivittää alkupisteen tiedot yhdelle ruudukon Ruutu-oliolle.
-        
+
         Parametrit:
             y: Alkupisteen y-koordinaatti kartalla
             x: Alkupisteen x-koordinaatti kartalla
         '''
-        
+
         self.alku = self.ruudukko[y][x]
         self.alku.alku = True
         self.alku.etaisyys = 0
 
     def _aseta_loppu(self, y, x):
         '''Päivittää loppupisteen tiedot yhdelle ruudukon Ruutu-oliolle.
-        
+
         Parametrit:
             y: Loppupisteen y-koordinaatti kartalla
             x: Loppupisteen x-koordinaatti kartalla
         '''
-        
+
         self.loppu = self.ruudukko[y][x]
         self.loppu.maali = True
 
     def kaynnista(self):
         '''Suorituskykymittauksen suorittaminen.'''
-        
+
         for kartta in kartat:
             self.kartta = kartta["tiedosto"]
 
@@ -174,7 +174,7 @@ class Suorituskyky:
 
     def _tulosta_tulokset(self, kartta):
         '''Tulostaa karttaan liittyvät mittaustulokset.'''
-        
+
         print(kartta["tiedosto"])
         print("reitit:", self.reitit_lkm, "kpl")
         print("dijkstra:", mean(kartta["dijkstra_aika"])*1000, "ms")
@@ -192,7 +192,7 @@ class Suorituskyky:
 
     def _tallenna_tiedostoon(self, kartat):
         '''Tallentaa karttoihin liittyvät mittaustulokset CSV-tiedostoon.'''
-        
+
         with open("data.csv", "w", newline="") as csvfile:
             otsikot = (
                 'tiedostonimi,'
@@ -231,10 +231,10 @@ class Suorituskyky:
 
     def _mittaus(self, algoritmi):
         '''Reitinhaun toistomittaus valitun algoritmin mukaisesti.
-        
+
         Palauttaa kaikki reittiin kohdistuvat toistomittausten ajat listana.
         '''
-        
+
         ajat = []
         for _ in range(self.toistot_lkm):
             self._nollaa_haku()
@@ -252,11 +252,11 @@ class Suorituskyky:
 
     def _suorita_haku(self):
         '''Yksittäisen reitinhaun suoritus ja aikamittaus.
-        
+
         Palauttaa:
             Algoritmin suoritukseen kulunut aika
         '''
-        
+
         if self.etsi:
             aika_alku = time.time()
             while self.etsi:

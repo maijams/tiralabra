@@ -1,11 +1,11 @@
 class Ruutu:
     '''Yksittäisen ruudun ominaisuuksista vastaava luokka.
-    
+
     Parametrit:
         y: Ruudun y-koordinaatti kartassa
         x: Ruudun x-koordinaatti kartassa
     '''
-    
+
     def __init__(self, y, x):
         self.y = y
         self.x = x

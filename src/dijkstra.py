@@ -4,12 +4,12 @@ from math import sqrt
 
 class Dijkstra:
     '''Luokka joka huolehtii Dijkstran algoritmin toiminnasta.
-    
+
     Parametrit:
         ruudukko: Matriisi reitinhakua varten
         alku: Reitinhaun aloitusruutu
     '''
-    
+
     def __init__(self, ruudukko, alku):
         self.nimi = "Dijkstra"
         self.ruudukko = ruudukko
@@ -20,10 +20,10 @@ class Dijkstra:
 
     def etsi_lyhin(self):
         '''Algoritmin suoritus.
-        
+
         Palauttaa True jos reitti löytyy, False jos reittiä ei löydy.
         '''
-        
+
         while len(self.jono) > 0:
             ruutu = heappop(self.jono)[2]
             if ruutu.vierailtu:
@@ -53,7 +53,7 @@ class Dijkstra:
 
     def _palauta_reitti(self, ruutu):
         '''Käy läpi reitin varrella olevat ruudut ja lisää ne listaan.'''
-        
+
         while not ruutu.alku:
             self.reitti.append(ruutu)
             ruutu = ruutu.edellinen

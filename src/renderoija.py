@@ -13,18 +13,18 @@ PINKKI = (235, 52, 189)
 
 class Renderoija:
     '''Pygame-ikkunan piirtämisestä vastaava luokka.
-    
+
     Parametrit:
         ikkuna: Pygame-ikkuna
     '''
-    
+
     def __init__(self, ikkuna):
         self._ikkuna = ikkuna
         self._fontti = pygame.font.SysFont("Arial", 24)
 
     def renderoi(self, animoitu, algoritmi, alku, loppu, loytyi, aika):
         '''Ikkunnan pääelementtien piirtäminen.
-        
+
         Paramterit:
             animoitu: Boolean-arvo joka kertoo onko animaatio-toiminto aktiivinen
             algoritmi: Algoritmi-olio tai None-arvo
@@ -33,7 +33,7 @@ class Renderoija:
             loytyi: Boolean-arvo joka kertoo onko haku löytänyt reitin
             aika: Reitinhakuun kulunut aika
         '''
-        
+
         self._ikkuna.fill(MUSTA)
 
         self._aseta_kartta()
@@ -53,7 +53,7 @@ class Renderoija:
 
     def _aseta_kartta(self):
         '''Asettaa kartan annettuun ikkunan kohtaan.'''
-        
+
         positio_kartta = (100, 100)  # (x,y)
         kartta = pygame.transform.scale(
             pygame.image.load("reitti.png"), (900, 900))
@@ -61,13 +61,13 @@ class Renderoija:
 
     def _piirra_hakutulos(self, loppu, algoritmi, aika):
         '''Piirtää hakuun liittyvät mittaustulokset.
-        
+
         Parametrit:
             loppu: Loppupisteen Ruutu-olio
             algoritmi: Algoritmi-olio
             aika: Reitinhakuun kulunut aika
         '''
-        
+
         pituus = f'Reitin pituus: {(loppu.etaisyys):.2f}'
         tulos_pituus = self._fontti.render(pituus, True, VALKOINEN)
         self._ikkuna.blit(tulos_pituus, (1200, 400))
@@ -82,11 +82,11 @@ class Renderoija:
 
     def _piirra_varien_selitteet(self, algoritmi):
         '''Piirtää kartan värien selitteet kartan alapuolelle.
-        
+
         Parametrit:
             algoritmi: Algoritmi-olio
         '''
-        
+
         self._ikkuna.blit(self._fontti.render(
             "lähtö", True, PUNAINEN), (100, 1040))
         self._ikkuna.blit(self._fontti.render(
@@ -102,42 +102,42 @@ class Renderoija:
 
     def _piirra_valittu_algo(self, algoritmi):
         '''Piirtää valitun algoritmin nimen.
-        
+
         Parametrit:
             algoritmi: Algoritmi-olio
         '''
-        
+
         self._ikkuna.blit(self._fontti.render(
             f'Valittu {algoritmi.nimi}', True, VALKOINEN), (1200, 300))
 
     def _piirra_alkupisteen_tiedot(self, alku):
         '''Piirtää alkupisteen koordinaatit mikäli alkupiste on valittu.
-        
+
         Parametrit:
             Alku: Alkupisteen Ruutu-olio
         '''
-        
+
         alkupiste = self._fontti.render(
             f'Alku     Y: {alku.y},  X: {alku.x}', True, VALKOINEN)
         self._ikkuna.blit(alkupiste, (1200, 700))
 
     def _piirra_loppupisteen_tiedot(self, loppu):
         '''Piirtää loppupisteen koordinaatit mikäli loppupiste on valittu.
-        
+
         Parametrit:
             Loppu: Loppupisteen Ruutu-olio
         '''
-        
+
         loppupiste = self._fontti.render(
             f'Loppu   Y: {loppu.y},  X: {loppu.x}', True, VALKOINEN)
         self._ikkuna.blit(loppupiste, (1200, 750))
 
     def _piirra_kayttoohje(self, animoitu):
         '''Piirtää ohjelman käyttöohjeet.
-        
+
         Parametrit:
             animoitu: Boolean-arvo joka kertoo onko animaatio-toiminto aktiivinen'''
-            
+
         ohjeteksti = "Valitse lähtöpiste klikkaamalla kartan mustalla alueella. Toinen klikkaus valitsee loppupisteen."
         ohjeteksti2 = "Käynnistä haku komennoilla:   [D]: Dijkstra,   [S]: A*,   [J]: JPS,   0 = Nollaa haku"
         ohjeteksti3 = "Valitse kartta painikkeilla [1-9]"

@@ -26,11 +26,11 @@ kartat = [
 
 class Kayttoliittyma:
     '''Luokka joka sisältää ohjelman käyttöliittymän.
-    
+
     Parametrit:
         renderoija: Pygame-ikkunan piirtämisestä huolehtiva olio.
     '''
-    
+
     def __init__(self, renderoija):
         self.renderoija = renderoija
         self.kartta = kartat[0]
@@ -55,7 +55,7 @@ class Kayttoliittyma:
 
     def kaynnista(self):
         '''Huolehtii ohjelman perusloopista.'''
-        
+
         while True:
             self._kasittele_tapahtumat()
             if self.etsi:
@@ -73,7 +73,7 @@ class Kayttoliittyma:
 
     def _kasittele_tapahtumat(self):
         '''Käyttäjän antamien komentojen käsittely.'''
-        
+
         positio_kartta = (100, 100)  # (x,y)
         for tapahtuma in pygame.event.get():
             # Alku- ja loppupisteen valinta
@@ -139,7 +139,7 @@ class Kayttoliittyma:
     def _nollaa_haku(self):
         '''Nollaa reitinhakuun liittyvät parametrit kartan ja algoritmin vaihdon yhteydessä.
         Samalla alustetaan uusi kartta ja luodaan ruudukko reitinhakua varten.'''
-        
+
         self.algoritmi = None
         self.paivita_karttaa = True
         self.etsi = False
@@ -152,7 +152,7 @@ class Kayttoliittyma:
     def _hae_kartta(self):
         '''Hakee kartan tiedoston ja tallentaa siitä kopion tiedostoon "reitti.png".
         Otetaan talteen pikselikartta ja kartan koko.'''
-        
+
         polku = os.path.dirname(__file__)
         kuva = os.path.join(polku, 'kartat', self.kartta)
         self.kuva = Image.open(kuva)
@@ -162,9 +162,9 @@ class Kayttoliittyma:
         self.skaalauskerroin = 900/self.korkeus
 
     def _luo_ruudukko(self):
-        '''Alustetaan uutta reitinhakua varten koskematon 
+        '''Alustetaan uutta reitinhakua varten koskematon
         ruudukkomatriisi, joka koostuu Ruutu-olioista.'''
-        
+
         self.ruudukko = []
         for y in range(self.korkeus):
             rivi = []
@@ -182,34 +182,34 @@ class Kayttoliittyma:
 
     def _aseta_alku(self, y, x):
         '''Päivittää alkupisteen tiedot yhdelle ruudukon Ruutu-oliolle.
-        
+
         Parametrit:
             y: Alkupisteen y-koordinaatti kartalla
             x: Alkupisteen x-koordinaatti kartalla
         '''
-        
+
         self.alku = self.ruudukko[y][x]
         self.alku.alku = True
         self.alku.etaisyys = 0
 
     def _aseta_loppu(self, y, x):
         '''Päivittää loppupisteen tiedot yhdelle ruudukon Ruutu-oliolle.
-        
+
         Parametrit:
             y: Loppupisteen y-koordinaatti kartalla
             x: Loppupisteen x-koordinaatti kartalla
         '''
-        
+
         self.loppu = self.ruudukko[y][x]
         self.loppu.maali = True
 
     def _suorita_algoritmi(self):
         '''Algoritmin suoritus ja aikamittaus.
-        
+
         Palauttaa:
             Algoritmin suoritukseen kulunut aika
         '''
-        
+
         aika_alku = time.time()
         while self.etsi:
             self.loytyi = self.algoritmi.etsi_lyhin()
@@ -220,7 +220,7 @@ class Kayttoliittyma:
 
     def _suorita_animaatio(self):
         '''Animaation suorittaminen.'''
-        
+
         if self.loytyi:
             algoritmi = self.algoritmi.nimi
             self._nollaa_haku()
@@ -242,7 +242,7 @@ class Kayttoliittyma:
         '''Pikselikartan värittäminen ruudukon sisältämien Ruutu-olioiden
         ominaisuuksien perusteella. Väritetty kuva tallennetaan "reitti.png"-
         tiedostoon.'''
-        
+
         for y in range(self.korkeus):
             for x in range(self.leveys):
                 ruutu = self.ruudukko[y][x]
@@ -263,7 +263,7 @@ class Kayttoliittyma:
 
     def _valitse_kartta(self, kartta):
         '''Kartan vaihtamiseen liittyvien parametrin päivitys & haun nollaus.'''
-        
+
         if self.kartta == kartta:
             return
         self.kartta = kartta
