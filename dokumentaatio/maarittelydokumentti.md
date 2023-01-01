@@ -27,3 +27,6 @@ JPS aikavaativuus on O(b^d), jossa b on verkon solmujen määrä ja d on polun p
 
 ## Lähteet
 
+- https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+- https://en.wikipedia.org/wiki/A*_search_algorithm
+- https://encyclopedia.pub/entry/24246
