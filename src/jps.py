@@ -103,8 +103,8 @@ class JumpPointSearch:
     def lisaa_jumppoint(self, jumppoint):
         jumppoint.jumppoint = True
         etaisyys = jumppoint.etaisyys + \
-            sqrt(abs(jumppoint.y-self.loppu.y)**2 +
-                 abs(jumppoint.x-self.loppu.x)**2)
+            sqrt((jumppoint.y-self.loppu.y)**2 +
+                 (jumppoint.x-self.loppu.x)**2)
         self.laskuri += 1
         heappush(self.jono, (etaisyys, self.laskuri, jumppoint))
 

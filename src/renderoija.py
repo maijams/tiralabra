@@ -41,11 +41,11 @@ class Renderoija:
         self._ikkuna.blit(kartta, positio_kartta)
 
     def _piirra_hakutulos(self, loppu, algoritmi, aika):
-        pituus = f'Reitin pituus: {str(loppu.etaisyys)}'
+        pituus = f'Reitin pituus: {(loppu.etaisyys):.2f}'
         tulos_pituus = self._fontti.render(pituus, True, VALKOINEN)
         self._ikkuna.blit(tulos_pituus, (1200, 400))
 
-        solmut = f'Vieraillut solmut: {str(len(algoritmi.vieraillut))} kpl'
+        solmut = f'Vieraillut solmut: {len(algoritmi.vieraillut)} kpl'
         tulos_solmut = self._fontti.render(solmut, True, VALKOINEN)
         self._ikkuna.blit(tulos_solmut, (1200, 500))
 
@@ -58,14 +58,14 @@ class Renderoija:
             "lähtö", True, PUNAINEN), (100, 1040))
         self._ikkuna.blit(self._fontti.render(
             "maali", True, VIHREA), (200, 1040))
-        # self._ikkuna.blit(self._fontti.render("vierailtu", True, TURKOOSI), (300,1040))
         self._ikkuna.blit(self._fontti.render(
             "jonossa", True, KELTAINEN), (300, 1040))
         self._ikkuna.blit(self._fontti.render(
             "reitti", True, SININEN), (420, 1040))
-        if algoritmi == "JPS":
-            self._ikkuna.blit(self._fontti.render(
-                "jump point", True, PINKKI), (520, 1040))
+        if algoritmi is not None:
+            if algoritmi.nimi == "JPS":
+                self._ikkuna.blit(self._fontti.render(
+                    "jump point", True, PINKKI), (520, 1040))
 
     def _piirra_valittu_algo(self, algoritmi):
         self._ikkuna.blit(self._fontti.render(
@@ -83,12 +83,16 @@ class Renderoija:
 
     def _piirra_kayttoohje(self, animoitu):
         ohjeteksti = "Valitse lähtöpiste klikkaamalla kartan mustalla alueella. Toinen klikkaus valitsee loppupisteen."
-        ohjeteksti2 = "Käynnistä haku numeropainikkeilla:   1 = Dijkstra,   2 = A*,   3 = JPS,   0 = Nollaa haku                                 Valitse kartta painikkeilla 7, 8 ja 9"
+        ohjeteksti2 = "Käynnistä haku komennoilla:   [D]: Dijkstra,   [S]: A*,   [J]: JPS,   0 = Nollaa haku"
+        ohjeteksti3 = "Valitse kartta painikkeilla [1-9]"
         ohje = self._fontti.render(ohjeteksti, True, VALKOINEN)
         ohje2 = self._fontti.render(ohjeteksti2, True, VALKOINEN)
-        animaatio = self._fontti.render(
-            f'Animaatio (A): {animoitu}', True, VALKOINEN)
+        ohje3 = self._fontti.render(ohjeteksti3, True, VALKOINEN)
 
-        self._ikkuna.blit(ohje, (20, 20))
-        self._ikkuna.blit(ohje2, (20, 60))
+        animaatio = self._fontti.render(
+            f'Animaatio [A]: {animoitu}', True, VALKOINEN)
+
+        self._ikkuna.blit(ohje, (80, 20))
+        self._ikkuna.blit(ohje2, (80, 60))
+        self._ikkuna.blit(ohje3, (1150, 60))
         self._ikkuna.blit(animaatio, (1200, 150))

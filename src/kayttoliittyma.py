@@ -27,7 +27,7 @@ kartat = [
 class Kayttoliittyma:
     def __init__(self, renderoija):
         self.renderoija = renderoija
-        self.kartta = kartat[6]
+        self.kartta = kartat[0]
         self.ruudukko = []
         self.alku = None
         self.loppu = None
@@ -85,26 +85,38 @@ class Kayttoliittyma:
                     self.alku = None
                     self.loppu = None
                     self.nollaa_haku()
-                elif tapahtuma.key in (pygame.K_1, pygame.K_2, pygame.K_3):
+                elif tapahtuma.key in (pygame.K_d, pygame.K_s, pygame.K_j):
                     self.nollaa_haku()
                     self.etsi = True
-                    if tapahtuma.key == pygame.K_1:
+                    if tapahtuma.key == pygame.K_d:
                         self.algoritmi = Dijkstra(self.ruudukko, self.alku)
-                    elif tapahtuma.key == pygame.K_2:
+                    elif tapahtuma.key == pygame.K_s:
                         self.algoritmi = AStar(
                             self.ruudukko, self.alku, self.loppu)
-                    elif tapahtuma.key == pygame.K_3:
+                    elif tapahtuma.key == pygame.K_j:
                         self.algoritmi = JumpPointSearch(
                             self.ruudukko, self.alku, self.loppu)
 
             # Kartan valinta
             if tapahtuma.type == pygame.KEYDOWN:
-                if tapahtuma.key == pygame.K_7:
+                if tapahtuma.key == pygame.K_1:
                     self.valitse_kartta(kartat[0])
-                elif tapahtuma.key == pygame.K_8:
+                elif tapahtuma.key == pygame.K_2:
                     self.valitse_kartta(kartat[1])
-                elif tapahtuma.key == pygame.K_9:
+                elif tapahtuma.key == pygame.K_3:
                     self.valitse_kartta(kartat[2])
+                elif tapahtuma.key == pygame.K_4:
+                    self.valitse_kartta(kartat[3])
+                elif tapahtuma.key == pygame.K_5:
+                    self.valitse_kartta(kartat[4])
+                elif tapahtuma.key == pygame.K_6:
+                    self.valitse_kartta(kartat[5])
+                elif tapahtuma.key == pygame.K_7:
+                    self.valitse_kartta(kartat[6])
+                elif tapahtuma.key == pygame.K_8:
+                    self.valitse_kartta(kartat[7])
+                elif tapahtuma.key == pygame.K_9:
+                    self.valitse_kartta(kartat[8])
                 elif tapahtuma.key == pygame.K_a:
                     if self.animoitu:
                         self.animoitu = False

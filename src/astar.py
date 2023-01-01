@@ -37,10 +37,10 @@ class AStar:
                     naapuri.etaisyys = ruutu.etaisyys + uusi
                     naapuri.edellinen = ruutu
                     naapuri.jonossa = True
-                    manhattan = max(abs(naapuri.y-self.loppu.y),
+                    chebyshev = max(abs(naapuri.y-self.loppu.y),
                                     abs(naapuri.x-self.loppu.x))
                     heappush(self.jono, (naapuri.etaisyys +
-                                         manhattan, self.laskuri, naapuri))
+                                         chebyshev, self.laskuri, naapuri))
             return False
 
     def _palauta_reitti(self, ruutu):
