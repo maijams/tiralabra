@@ -19,5 +19,5 @@ Prokekti on tehty osana tietojenkäsittelytieteiden opintoja, Helsingin yliopist
 - [Viikkoraportti 4](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/viikkoraportit/viikko4.md)
 - [Viikkoraportti 5](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/viikkoraportit/viikko5.md)
 - [Viikkoraportti 6](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/viikkoraportit/viikko6.md)
-
+- [Viikkoraportti 7](https://github.com/maijams/tiralabra/blob/main/dokumentaatio/viikkoraportit/viikot7-9.md)
 
