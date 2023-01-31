@@ -16,7 +16,7 @@ class Ruutu:
         self.vierailtu = False
         self.jumppoint = False
         self.edellinen = None
-        self.etaisyys = None
+        self.etaisyys = 10**9
 
     def __str__(self):
         return f"{(self.y, self.x)}"

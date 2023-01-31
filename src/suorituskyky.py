@@ -268,5 +268,5 @@ class Suorituskyky:
 
 
 if __name__ == "__main__":
-    testi = Suorituskyky(20, 10)
+    testi = Suorituskyky(5, 1)
     testi.kaynnista()

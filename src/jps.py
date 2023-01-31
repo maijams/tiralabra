@@ -44,7 +44,7 @@ class JumpPointSearch:
             etaisyys += 1
             ruutu = self.ruudukko[nyky_y][nyky_x]
 
-            if not ruutu.seina and not ruutu.vierailtu:
+            if not ruutu.seina and etaisyys < ruutu.etaisyys:
                 ruutu.vierailtu = True
                 ruutu.edellinen = alku
                 ruutu.etaisyys = etaisyys
@@ -89,7 +89,7 @@ class JumpPointSearch:
             etaisyys += sqrt(2)
             ruutu = self.ruudukko[nyky_y][nyky_x]
 
-            if not ruutu.seina and not ruutu.vierailtu:
+            if not ruutu.seina and etaisyys < ruutu.etaisyys:
                 ruutu.vierailtu = True
                 ruutu.edellinen = alku
                 ruutu.etaisyys = etaisyys
@@ -132,19 +132,18 @@ class JumpPointSearch:
                 self._palauta_koko_reitti()
                 return True
 
-    def _lisaa_jumppoint(self, jumppoint):
+    def _lisaa_jumppoint(self, ruutu):
         '''Lisää jumppointin läpikäytävien ruutujen prioritetttilistalle.
 
         Parametrit:
-            jumppoint: Listalle lisättävä Ruutu-olio
+            ruutu: Listalle lisättävä Ruutu-olio
         '''
 
-        jumppoint.jumppoint = True
-        etaisyys = jumppoint.etaisyys + \
-            sqrt((jumppoint.y-self.loppu.y)**2 +
-                 (jumppoint.x-self.loppu.x)**2)
+        ruutu.jumppoint = True
+        linnuntie = sqrt((ruutu.y-self.loppu.y)**2 + (ruutu.x-self.loppu.x)**2)
+        uusi_etaisyys = ruutu.etaisyys + linnuntie
         self.laskuri += 1
-        heappush(self.jono, (etaisyys, self.laskuri, jumppoint))
+        heappush(self.jono, (uusi_etaisyys, self.laskuri, ruutu))
 
     def _palauta_vieraillut(self):
         '''Käy läpi reitin varrella olevat jumppointit ja

@@ -38,16 +38,18 @@ class Dijkstra:
             for suunta in suunnat:
                 naapuri = self.ruudukko[ruutu.y +
                                         suunta[0]][ruutu.x+suunta[1]]
-                if not naapuri.seina and not naapuri.jonossa and not naapuri.vierailtu:
+                if not naapuri.seina:
                     self.laskuri += 1
                     if (ruutu.y - naapuri.y) == 0 or (ruutu.x - naapuri.x) == 0:
-                        uusi = 1
+                        paino = 1
                     else:
-                        uusi = sqrt(2)
-                    naapuri.etaisyys = ruutu.etaisyys + uusi
-                    naapuri.edellinen = ruutu
-                    naapuri.jonossa = True
-                    heappush(self.jono, (naapuri.etaisyys,
+                        paino = sqrt(2)
+                    uusi_etaisyys = ruutu.etaisyys + paino
+                    if uusi_etaisyys < naapuri.etaisyys:
+                        naapuri.etaisyys = uusi_etaisyys
+                        naapuri.edellinen = ruutu
+                        naapuri.jonossa = True
+                        heappush(self.jono, (naapuri.etaisyys,
                                          self.laskuri, naapuri))
             return False
 
